@@ -5,9 +5,9 @@
             <name>SerialAcc</name>
             <creation-uuid>c7941d71-eb8f-41eb-9957-9d729926b29c</creation-uuid>
             <make-project-type>0</make-project-type>
-            <c-extensions/>
+            <c-extensions>c</c-extensions>
             <cpp-extensions/>
-            <header-extensions/>
+            <header-extensions>h</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
         </data>
