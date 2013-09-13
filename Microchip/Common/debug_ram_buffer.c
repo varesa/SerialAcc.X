@@ -21,8 +21,8 @@ Description:
  Software License Agreement:
 
  The software supplied herewith by Microchip Technology Incorporated
- (the "Company") for its PIC® Microcontroller is intended and
- supplied to you, the Company’s customer, for use solely and
+ (the "Company") for its PICï¿½ Microcontroller is intended and
+ supplied to you, the Companyï¿½s customer, for use solely and
  exclusively on Microchip PIC Microcontroller products. The
  software is owned by the Company and/or its supplier, and is
  protected under applicable copyright laws. All rights are reserved.
@@ -40,7 +40,7 @@ Description:
 *******************************************************************/
 
 /** Include Files *************************************************/
-#include <Compiler.h>
+#include "../Compiler.h"
 #include <GenericTypeDefs.h>
 
 /** Build Options *************************************************/
