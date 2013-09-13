@@ -16,83 +16,49 @@
       <logicalFolder name="Common" displayName="Common" projectFiles="true">
         <itemPath>Microchip/Common/debug_ram_buffer.c</itemPath>
         <itemPath>Microchip/Common/TimeDelay.c</itemPath>
-        <itemPath>Microchip/Common/timer.c</itemPath>
-        <itemPath>Microchip/Common/uart2.c</itemPath>
       </logicalFolder>
       <logicalFolder name="Include" displayName="Include" projectFiles="true">
         <logicalFolder name="USB" displayName="USB" projectFiles="true">
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="USB" displayName="USB" projectFiles="true">
-        <logicalFolder name="Audio Device Driver"
-                       displayName="Audio Device Driver"
-                       projectFiles="true">
-          <itemPath>Microchip/USB/Audio Device Driver/usb_function_audio.c</itemPath>
-        </logicalFolder>
         <logicalFolder name="CDC Device Driver"
                        displayName="CDC Device Driver"
                        projectFiles="true">
           <itemPath>Microchip/USB/CDC Device Driver/usb_function_cdc.c</itemPath>
-        </logicalFolder>
-        <logicalFolder name="CDC Host Driver"
-                       displayName="CDC Host Driver"
-                       projectFiles="true">
-          <itemPath>Microchip/USB/CDC Host Driver/usb_host_cdc.c</itemPath>
-          <itemPath>Microchip/USB/CDC Host Driver/usb_host_cdc_interface.c</itemPath>
-        </logicalFolder>
-        <logicalFolder name="Charger Host Driver"
-                       displayName="Charger Host Driver"
-                       projectFiles="true">
-          <itemPath>Microchip/USB/Charger Host Driver/usb_host_charger.c</itemPath>
         </logicalFolder>
         <logicalFolder name="Generic Device Driver"
                        displayName="Generic Device Driver"
                        projectFiles="true">
           <itemPath>Microchip/USB/Generic Device Driver/usb_function_generic.c</itemPath>
         </logicalFolder>
-        <logicalFolder name="Generic Host Driver"
-                       displayName="Generic Host Driver"
-                       projectFiles="true">
-          <itemPath>Microchip/USB/Generic Host Driver/usb_host_generic.c</itemPath>
-        </logicalFolder>
-        <logicalFolder name="HID Device Driver"
-                       displayName="HID Device Driver"
-                       projectFiles="true">
-          <itemPath>Microchip/USB/HID Device Driver/usb_function_hid.c</itemPath>
-        </logicalFolder>
-        <logicalFolder name="HID Host Driver"
-                       displayName="HID Host Driver"
-                       projectFiles="true">
-          <itemPath>Microchip/USB/HID Host Driver/usb_host_hid.c</itemPath>
-          <itemPath>Microchip/USB/HID Host Driver/usb_host_hid_parser.c</itemPath>
-        </logicalFolder>
-        <logicalFolder name="MSD Device Driver"
-                       displayName="MSD Device Driver"
-                       projectFiles="true">
-          <itemPath>Microchip/USB/MSD Device Driver/usb_function_msd.c</itemPath>
-        </logicalFolder>
-        <logicalFolder name="MSD Host Driver"
-                       displayName="MSD Host Driver"
-                       projectFiles="true">
-          <itemPath>Microchip/USB/MSD Host Driver/usb_host_msd.c</itemPath>
-          <itemPath>Microchip/USB/MSD Host Driver/usb_host_msd_scsi.c</itemPath>
-        </logicalFolder>
-        <logicalFolder name="Printer Host Driver"
-                       displayName="Printer Host Driver"
-                       projectFiles="true">
-          <logicalFolder name="Documentation"
-                         displayName="Documentation"
-                         projectFiles="true">
-          </logicalFolder>
-          <itemPath>Microchip/USB/Printer Host Driver/usb_host_printer.c</itemPath>
-          <itemPath>Microchip/USB/Printer Host Driver/usb_host_printer_esc_pos.c</itemPath>
-          <itemPath>Microchip/USB/Printer Host Driver/usb_host_printer_pcl_5.c</itemPath>
-          <itemPath>Microchip/USB/Printer Host Driver/usb_host_printer_postscript.c</itemPath>
-          <itemPath>Microchip/USB/Printer Host Driver/usb_host_printer_primitives.c</itemPath>
-        </logicalFolder>
         <itemPath>Microchip/USB/usb_device.c</itemPath>
-        <itemPath>Microchip/USB/usb_host.c</itemPath>
-        <itemPath>Microchip/USB/usb_otg.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Utilities" displayName="Utilities" projectFiles="true">
+        <logicalFolder name="USB Drivers" displayName="USB Drivers" projectFiles="true">
+          <logicalFolder name="MPLABComm" displayName="MPLABComm" projectFiles="true">
+            <logicalFolder name="Linux" displayName="Linux" projectFiles="true">
+              <logicalFolder name="32Bit" displayName="32Bit" projectFiles="true">
+              </logicalFolder>
+              <logicalFolder name="64Bit" displayName="64Bit" projectFiles="true">
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="MacOSX" displayName="MacOSX" projectFiles="true">
+              <logicalFolder name="OSX_10.5" displayName="OSX_10.5" projectFiles="true">
+              </logicalFolder>
+              <logicalFolder name="OSX_10.6_And_Later"
+                             displayName="OSX_10.6_And_Later"
+                             projectFiles="true">
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="Windows" displayName="Windows" projectFiles="true">
+              <logicalFolder name="amd64" displayName="amd64" projectFiles="true">
+              </logicalFolder>
+              <logicalFolder name="i386" displayName="i386" projectFiles="true">
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
@@ -100,6 +66,7 @@
                    projectFiles="true">
       <itemPath>main.c</itemPath>
       <itemPath>usb_descriptors.c</itemPath>
+      <itemPath>usb_io.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -165,6 +132,22 @@
         <property key="use-indirect-calls" value="false"/>
       </C32>
       <C32-AS>
+        <property key="assembler-symbols" value=""/>
+        <property key="enable-symbols" value="true"/>
+        <property key="exclude-floating-point-library" value="false"/>
+        <property key="expand-macros" value="false"/>
+        <property key="extra-include-directories-for-assembler" value=""/>
+        <property key="extra-include-directories-for-preprocessor" value=""/>
+        <property key="false-conditionals" value="false"/>
+        <property key="keep-locals" value="false"/>
+        <property key="list-assembly" value="false"/>
+        <property key="list-source" value="false"/>
+        <property key="list-symbols" value="false"/>
+        <property key="oXC32asm-list-to-file" value="false"/>
+        <property key="omit-debug-dirs" value="false"/>
+        <property key="omit-forms" value="false"/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="warning-level" value=""/>
       </C32-AS>
       <C32-LD>
         <property key="additional-options-use-response-files" value="false"/>
@@ -220,6 +203,71 @@
         <property key="wpo-lto" value="false"/>
       </C32Global>
       <PICkit3PlatformTool>
+        <property key="ADC 1" value="true"/>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="CAN1" value="true"/>
+        <property key="CAN2" value="true"/>
+        <property key="CHANGE NOTICE" value="true"/>
+        <property key="COMPARATOR" value="true"/>
+        <property key="DMA" value="true"/>
+        <property key="ETHERNET CONTROLLER" value="true"/>
+        <property key="Freeze All Other Peripherals" value="true"/>
+        <property key="I2C1" value="true"/>
+        <property key="I2C2" value="true"/>
+        <property key="I2C3" value="true"/>
+        <property key="I2C4" value="true"/>
+        <property key="I2C5" value="true"/>
+        <property key="INPUT CAPTURE 1" value="true"/>
+        <property key="INPUT CAPTURE 2" value="true"/>
+        <property key="INPUT CAPTURE 3" value="true"/>
+        <property key="INPUT CAPTURE 4" value="true"/>
+        <property key="INPUT CAPTURE 5" value="true"/>
+        <property key="INTERRUPT CONTROL" value="true"/>
+        <property key="OUTPUT COMPARE 1" value="true"/>
+        <property key="OUTPUT COMPARE 2" value="true"/>
+        <property key="OUTPUT COMPARE 3" value="true"/>
+        <property key="OUTPUT COMPARE 4" value="true"/>
+        <property key="OUTPUT COMPARE 5" value="true"/>
+        <property key="PARALLEL MASTER/SLAVE PORT" value="true"/>
+        <property key="REAL TIME CLOCK" value="true"/>
+        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
+        <property key="TIMER1" value="true"/>
+        <property key="TIMER2" value="true"/>
+        <property key="TIMER3" value="true"/>
+        <property key="TIMER4" value="true"/>
+        <property key="TIMER5" value="true"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="UART1" value="true"/>
+        <property key="UART2" value="true"/>
+        <property key="UART3" value="true"/>
+        <property key="UART4" value="true"/>
+        <property key="UART5" value="true"/>
+        <property key="UART6" value="true"/>
+        <property key="hwtoolclock.frcindebug" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="false"/>
+        <property key="memories.configurationmemory" value="false"/>
+        <property key="memories.eeprom" value="false"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="false"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.end" value="0x1d07ffff"/>
+        <property key="memories.programmemory.start" value="0x1d000000"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmertogo.imagename" value=""/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.pgmspeed" value="2"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveprogramrange.end" value="0x1d07ffff"/>
+        <property key="programoptions.preserveprogramrange.start" value="0x1d000000"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.testmodeentrymethod" value="VPPFirst"/>
+        <property key="programoptions.usehighvoltageonmclr" value="false"/>
+        <property key="programoptions.uselvpprogramming" value="false"/>
+        <property key="voltagevalue" value="3.25"/>
       </PICkit3PlatformTool>
     </conf>
   </confs>
