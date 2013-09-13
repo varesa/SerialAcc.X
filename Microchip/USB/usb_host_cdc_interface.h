@@ -53,6 +53,13 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 Author          Date    Comments
 --------------------------------------------------------------------------------
 ADG          9-Apr-2008 First release
+********************************************************************************
+ Change History:
+ Revision     Description
+ v2.7         Modified the code to allow connection of USB-RS232 dongles that do
+              not fully comply with CDC specifications
+              Modified API USBHostCDC_Api_Send_OUT_Data to allow data transfers
+              more than 256 bytes
 *******************************************************************************/
 //DOM-IGNORE-END
 
@@ -103,7 +110,7 @@ BOOL USBHostCDC_Api_Get_IN_Data(BYTE no_of_bytes, BYTE* data);
 
 /****************************************************************************
   Function:
-    BOOL USBHostCDC_Api_Send_OUT_Data(BYTE no_of_bytes, BYTE* data)
+    BOOL USBHostCDC_Api_Send_OUT_Data(WORD no_of_bytes, BYTE* data)
 
   Description:
     This function is called by application to transmit out data over DATA
@@ -125,7 +132,7 @@ BOOL USBHostCDC_Api_Get_IN_Data(BYTE no_of_bytes, BYTE* data);
   Remarks:
     None
 ***************************************************************************/
-BOOL USBHostCDC_Api_Send_OUT_Data(BYTE no_of_bytes, BYTE* data);
+BOOL USBHostCDC_Api_Send_OUT_Data(WORD no_of_bytes, BYTE* data);
 
 /****************************************************************************
   Function:

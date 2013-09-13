@@ -66,8 +66,8 @@ Description:
  Software License Agreement:
 
  The software supplied herewith by Microchip Technology Incorporated
- (the “Company”) for its PICmicro® Microcontroller is intended and
- supplied to you, the Company’s customer, for use solely and
+ (the "Company") for its PICmicro(r) Microcontroller is intended and
+ supplied to you, the Company's customer, for use solely and
  exclusively on Microchip PICmicro Microcontroller products. The
  software is owned by the Company and/or its supplier, and is
  protected under applicable copyright laws. All rights are reserved.
@@ -76,7 +76,7 @@ Description:
  civil liability for the breach of the terms and conditions of this
  license.
 
- THIS SOFTWARE IS PROVIDED IN AN “AS IS” CONDITION. NO WARRANTIES,
+ THIS SOFTWARE IS PROVIDED IN AN "AS IS" CONDITION. NO WARRANTIES,
  WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
  TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
  PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
@@ -90,9 +90,9 @@ Description:
  File Description:
 
  Change History:
-  Rev    Description
-  ----   -----------
-  2.6    Changed MCHPFSUSB stack revision number
+  Rev           Description
+  ----------    -----------
+  2.6 - 2.9     No change except stack revision number
 ********************************************************************/
 //DOM-IGNORE-END
 
@@ -108,23 +108,15 @@ Description:
 // *****************************************************************************
 
 #include "GenericTypeDefs.h"
-#include "Compiler.h"
+#include "../Compiler.h"
 
-#include "usb_config.h"             // Must be defined by the application
+#include "../../usb_config.h"             // Must be defined by the application
 
 #include "usb_common.h"         // Common USB library definitions
 #include "usb_ch9.h"            // USB device framework definitions
 
 #if defined( USB_SUPPORT_DEVICE )
     #include "usb_device.h"     // USB Device abstraction layer interface
-#endif
-
-#if defined( USB_SUPPORT_HOST )
-    #include "usb_host.h"       // USB Host abstraction layer interface
-#endif
-
-#if defined ( USB_SUPPORT_OTG )
-    #include "usb_otg.h" 
 #endif
 
 #include "usb_hal.h"            // Hardware Abstraction Layer interface
@@ -136,7 +128,7 @@ Description:
 // *****************************************************************************
 
 #define USB_MAJOR_VER   2       // Firmware version, major release number.
-#define USB_MINOR_VER   6       // Firmware version, minor release number.
+#define USB_MINOR_VER   9       // Firmware version, minor release number.
 #define USB_DOT_VER     0       // Firmware version, dot release number.
 
 #endif // _USB_H_

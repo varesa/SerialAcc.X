@@ -43,7 +43,7 @@ Description:
  Dependancies:    none
  Processor:       PIC18, PIC24, or PIC32 USB Microcontrollers
  Hardware:        The code is natively intended to be used on the following
-     				hardware platforms: PICDEM™ FS USB Demo Board, 
+     				hardware platforms: PICDEMï¿½ FS USB Demo Board, 
      				PIC18F87J50 FS USB Plug-In Module, or
      				Explorer 16 + PIC24 USB PIM.  The firmware may be
      				modified for use on other USB platforms by editing the
@@ -54,8 +54,8 @@ Description:
  Software License Agreement:
 
  The software supplied herewith by Microchip Technology Incorporated
- (the “Company”) for its PICmicro® Microcontroller is intended and
- supplied to you, the Company’s customer, for use solely and
+ (the ï¿½Companyï¿½) for its PICmicroï¿½ Microcontroller is intended and
+ supplied to you, the Companyï¿½s customer, for use solely and
  exclusively on Microchip PICmicro Microcontroller products. The
  software is owned by the Company and/or its supplier, and is
  protected under applicable copyright laws. All rights are reserved.
@@ -64,7 +64,7 @@ Description:
  civil liability for the breach of the terms and conditions of this
  license.
 
- THIS SOFTWARE IS PROVIDED IN AN “AS IS” CONDITION. NO WARRANTIES,
+ THIS SOFTWARE IS PROVIDED IN AN ï¿½AS ISï¿½ CONDITION. NO WARRANTIES,
  WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
  TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
  PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
@@ -77,21 +77,37 @@ Description:
  Change History:
   Rev    Description
   ----   -----------
-  2.6    No Change
+  2.6-   No Change
+  2.6a   
+
+  2.7    Minor changes changes to the structure of the conditional
+         compilation statement ordering.
+
+  2.7a   No Change
 ********************************************************************/
 
 #ifndef _USB_HAL_H_
 #define _USB_HAL_H_
 //DOM-IGNORE-END
 
-#if defined(USB_SUPPORT_HOST) || defined(USB_SUPPORT_OTG)
-
-#if defined(__C30__)
-    #include "USB\usb_hal_pic24.h"
-
+#if defined(__18CXX)
+    #include "USB/usb_hal_pic18.h"
+#elif defined(__C30__) || defined __XC16__
+	#if defined(__dsPIC33E__) 
+	    #include "USB/usb_hal_dspic33E.h"
+	#elif defined(__PIC24E__)
+		#include "USB/usb_hal_pic24e.h"
+	#else
+    #include "USB/usb_hal_pic24.h"
+	#endif
 #elif defined(__PIC32MX__)
-    #include "USB\usb_hal_pic32.h"
+    #include "usb_hal_pic32.h"
+#elif defined(_PIC14E)
+    #include "USB/usb_hal_pic16f1.h"
+#else
+    #error "Silicon Platform not defined"
 #endif
+    
 
 /**********************
  Interface Routines
@@ -189,7 +205,7 @@ void USBHALSetBusAddress( BYTE addr );
 
 
 /*
- To Do: Define a method to check for SE0 & a way to send a reset (SE0).
+ MCHP: Define a method to check for SE0 & a way to send a reset (SE0).
  */
 
 
@@ -630,15 +646,6 @@ BOOL USBHALSetEpConfiguration ( BYTE ep_num, UINT16 max_pkt_size, UINT16 flags )
 
 BOOL USBHALInitialize ( unsigned long flags );
 
-#else   // defined(USB_SUPPORT_HOST) || defined(USB_SUPPORT_OTG)
-    #if defined(__18CXX)
-        #include "usb_hal_pic18.h"
-    #elif defined(__C30__)
-        #include "usb_hal_pic24.h"
-    #elif defined(__PIC32MX__)
-        #include "usb_hal_pic32.h"
-    #endif
-#endif  // defined(USB_SUPPORT_HOST) || defined(USB_SUPPORT_OTG)
 #endif  // _USB_HAL_H_
 /*************************************************************************
  * EOF

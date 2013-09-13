@@ -81,11 +81,22 @@ PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
 IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
 CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 
-Author          Date    Comments
---------------------------------------------------------------------------------
-KO          ??-???-2008 First release
-
 *******************************************************************************/
+
+//DOM-IGNORE-BEGIN
+/********************************************************************
+ File Description:
+
+ Change History:
+  Rev           Description
+  ----------    -----------
+  2.6 - 2.6A    No chance except stack revision number
+  2.7           Minor updates to USBHostPrinterGetStatus() header
+                to better describe the function requirements and
+                operation.
+********************************************************************/
+//DOM-IGNORE-END
+
 #ifndef __USBHOSTPRINTER_H__
 #define __USBHOSTPRINTER_H__
 //DOM-IGNORE-END
@@ -1123,7 +1134,7 @@ typedef enum
         // USB_PRINTER_COMMAND enumeration for more information.
 typedef union {
     void            *pointerRAM;    // Pointer to data in RAM.
-  #if defined( __C30__ )
+  #if defined( __C30__ ) || defined __XC16__
     __prog__ void   *pointerROM;    // Pointer to data in ROM.
   #elif defined( __PIC32MX__ )
     const void      *pointerROM;    // Pointer to data in ROM.
@@ -1135,7 +1146,7 @@ typedef union {
 #define USB_DATA_POINTER_RAM(x)  ((USB_DATA_POINTER)(void *)x)
         // Use this definition to cast a pointer being passed to the function
         // USBHostPrinterCommand() that points to data in ROM.
-#if defined( __C30__ )
+#if defined( __C30__ ) || defined __XC16__
     #define USB_DATA_POINTER_ROM(x)  ((USB_DATA_POINTER)(__prog__ void *)x)
 #elif defined( __PIC32MX__ )
     #define USB_DATA_POINTER_ROM(x)  ((USB_DATA_POINTER)(const void *)x)
@@ -1971,6 +1982,14 @@ DWORD USBHostPrinterGetRxLength( BYTE deviceAddress );
     * Bit 4 - Select; 1 = selected, 0 = not selected
     * Bit 3 - Not Error; 1 = no error, 0 = error
     * All other bits are reserved.
+
+    The *status parameter is not updated until the EVENT_PRINTER_REQUEST_DONE
+    event is thrown.  Until that point the value of *status is unknown.
+
+    The *status parameter will only be updated if this function returns
+    USB_SUCCESS.  If this function returns with any other error code then the
+    EVENT_PRINTER_REQUEST_DONE event will not be thrown and the status field
+    will not be updated.
 
   Preconditions:
     The device must be connected and enumerated.

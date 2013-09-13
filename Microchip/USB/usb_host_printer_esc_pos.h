@@ -297,7 +297,7 @@ BOOL USBHostPrinterLanguageESCPOSIsSupported( char *deviceID,
         BYTE                    *imageDataPOS;
         USB_PRINTER_IMAGE_INFO  imageInfo;
         BYTE                    returnCode;
-        #if defined (__C30__)
+        #if defined (__C30__) || defined __XC16__
             BYTE __prog__       *ptr;
             ptr = (BYTE __prog__ *)logoMCHP.address;
         #elif defined (__PIC32MX__)

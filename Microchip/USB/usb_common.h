@@ -37,17 +37,17 @@ Description:
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
 
-* FileName:        usb_common.h
-* Dependencies:    See included files, below.
-* Processor:       PIC18/PIC24/PIC32MX microcontrollers with USB module
-* Compiler:        C18 v3.13+/C30 v2.01+/C32 v0.00.18+
-* Company:         Microchip Technology, Inc.
+ FileName:        usb_common.h
+ Dependencies:    See included files, below.
+ Processor:       PIC18/PIC24/PIC32MX microcontrollers with USB module
+ Compiler:        C18 v3.13+/C30 v2.01+/C32 v0.00.18+
+ Company:         Microchip Technology, Inc.
 
 Software License Agreement
 
 The software supplied herewith by Microchip Technology Incorporated
-(the “Company”) for its PICmicro® Microcontroller is intended and
-supplied to you, the Company’s customer, for use solely and
+(the ï¿½Companyï¿½) for its PICmicroï¿½ Microcontroller is intended and
+supplied to you, the Companyï¿½s customer, for use solely and
 exclusively on Microchip PICmicro Microcontroller products. The
 software is owned by the Company and/or its supplier, and is
 protected under applicable copyright laws. All rights are reserved.
@@ -56,7 +56,7 @@ user to criminal sanctions under applicable laws, as well as to
 civil liability for the breach of the terms and conditions of this
 license.
 
-THIS SOFTWARE IS PROVIDED IN AN “AS IS” CONDITION. NO WARRANTIES,
+THIS SOFTWARE IS PROVIDED IN AN ï¿½AS ISï¿½ CONDITION. NO WARRANTIES,
 WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
 TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
 PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
@@ -72,6 +72,8 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
   Rev    Description
   ----   -----------
   2.6    Moved many of the USB events
+  2.6a   Changed the limit of USB_EVENT from UINT_MAX to INT_MAX
+  2.7    No change
 ********************************************************************/
 //DOM-IGNORE-END
 
@@ -81,7 +83,9 @@ CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 #define _USB_COMMON_H_
 //DOM-IGNORE-END
 
+#include "../../usb_config.h"
 #include <limits.h>
+#include "../GenericTypeDefs.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -326,6 +330,36 @@ typedef enum
     // Device-mode bus reset received.  This event is not used by the Host 
     // stack.                  
     EVENT_RESET,  
+    
+    // In Host mode, an isochronous data read has completed.  This event will only
+    // be passed to the DataEventHandler, which is only utilized if it is defined.
+    // Note that the DataEventHandler is called from within the USB interrupt, so 
+    // it is critical that it return in time for the next isochronous data packet.
+    EVENT_DATA_ISOC_READ,
+    
+    // In Host mode, an isochronous data write has completed.  This event will only
+    // be passed to the DataEventHandler, which is only utilized if it is defined.  
+    // Note that the DataEventHandler is called from within the USB interrupt, so 
+    // it is critical that it return in time for the next isochronous data packet.
+    EVENT_DATA_ISOC_WRITE,
+    
+    // In Host mode, this event gives the application layer the option to reject
+    // a client driver that was selected by the stack.  This is needed when multiple
+    // devices are supported by class level support, but one configuration and client 
+    // driver is preferred over another.  Since configuration number is not guaranteed,
+    // the stack cannot do this automatically.  This event is issued only when 
+    // looking through configuration descriptors; the driver selected at the device 
+    // level cannot be overridden, since there shouldn't be any other options to 
+    // choose from.
+    EVENT_OVERRIDE_CLIENT_DRIVER_SELECTION,
+
+    // In host mode, this event is thrown for every millisecond that passes.  Like all
+    // events, this is thrown from the USBHostTasks() or USBTasks() routine so its
+    // timeliness will be determined by the rate that these functions are called.  If
+    // they are not called very often, then the 1ms events will build up and be 
+    // dispatched as the USBTasks() or USBHostTasks() functions are called (one event
+    // per call to these functions.
+    EVENT_1MS,
 
     // Class-defined event offsets start here:
     EVENT_GENERIC_BASE  = 400,      // Offset for Generic class events
@@ -347,7 +381,7 @@ typedef enum
 
     // There was a transfer error on the USB.  The data associated with this
     // event is of data type HOST_TRANSFER_DATA.
-    EVENT_BUS_ERROR     = UINT_MAX  
+    EVENT_BUS_ERROR     = INT_MAX  
 
 } USB_EVENT;
 
@@ -383,6 +417,22 @@ typedef struct _vbus_power_data
     BYTE            port;           // Physical port number
     BYTE            current;        // Current in 2mA units
 } USB_VBUS_POWER_EVENT_DATA;
+
+
+// *****************************************************************************
+/* USB_OVERRIDE_CLIENT_DRIVER_EVENT_DATA Data
+
+This data structure is passed to the application layer when a client driver is
+select, in case multiple client drivers can support a particular device.
+*/
+typedef struct _override_client_driver_data
+{        
+    WORD idVendor;              
+    WORD idProduct;             
+    BYTE bDeviceClass;          
+    BYTE bDeviceSubClass;       
+    BYTE bDeviceProtocol;       
+} USB_OVERRIDE_CLIENT_DRIVER_EVENT_DATA;
 
 
 // *****************************************************************************

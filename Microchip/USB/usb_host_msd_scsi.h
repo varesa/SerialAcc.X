@@ -63,16 +63,20 @@ PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
 IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
 CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 
+Change History:
+  Rev   Description
+  ----  --------------------------------------
+  2.6a- No change
+   2.7
 *******************************************************************************/
 
 #ifndef __USBHOSTMSDSCSI_H__
 #define __USBHOSTMSDSCSI_H__
 //DOM-IGNORE-END
 
-#include "usb_config.h"
-#include "USB\usb.h"
-#include "FSConfig.h"
-#include "MDD File System\FSDefs.h"
+#include "USB/usb.h"
+#include "FSconfig.h"
+#include "MDD File System/FSDefs.h"
 
 // *****************************************************************************
 // *****************************************************************************

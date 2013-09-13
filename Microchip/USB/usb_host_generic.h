@@ -246,6 +246,7 @@ BOOL USBHostGenericInit ( BYTE address, DWORD flags, BYTE clientDriverID );
     USB_EVENT event - The bus event that occured
     void *data      - Pointer to event-specific data
     DWORD size      - Size of the event-specific data
+
   Return Values:
     TRUE    - The event was handled
     FALSE   - The event was not handled
@@ -301,7 +302,7 @@ BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event, void *data, DWO
     None
 
   Parameters:
-    deviceAddress     - USB Address of the device.
+    BYTE deviceAddress	- USB Address of the device.
 
   Return Values:
     TRUE    - The device has been detached, or an invalid deviceAddress is given.
@@ -335,8 +336,8 @@ BOOL USBHostGenericEventHandler ( BYTE address, USB_EVENT event, void *data, DWO
     The device must be connected and enumerated.
 
   Parameters:
-    pDevID  - Pointer to a structure containing the Device ID Info (VID,
-                    PID, serial number, and device address).
+    GENERIC_DEVICE_ID* pDevID  - Pointer to a structure containing the Device ID Info (VID,
+                    		 PID, serial number, and device address).
 
   Return Values:
     TRUE    - The device is connected
@@ -377,7 +378,7 @@ BOOL USBHostGenericGetDeviceAddress(GENERIC_DEVICE_ID *pDevID);
     The device must be connected and enumerated.
 
   Parameters:
-    deviceAddress     - USB Address of the device
+    BYTE deviceAddress	- USB Address of the device
 
   Returns:
     Returns the number of bytes most recently received from the Generic
@@ -403,9 +404,9 @@ BOOL USBHostGenericGetDeviceAddress(GENERIC_DEVICE_ID *pDevID);
     The device must be connected and enumerated.
 
   Parameters:
-    deviceAddress  - USB Address of the device.
-    buffer         - Pointer to the data buffer
-    length         - Number of bytes to be transferred
+    BYTE deviceAddress  - USB Address of the device.
+    BYTE *buffer        - Pointer to the data buffer
+    DWORD length        - Number of bytes to be transferred
 
   Return Values:
     USB_SUCCESS         - The Read was started successfully
@@ -450,7 +451,7 @@ BYTE USBHostGenericRead( BYTE deviceAddress, void *buffer, DWORD length);
     The device must be connected and enumerated.
 
   Parameters:
-    deviceAddress     - USB Address of the device
+    BYTE deviceAddress     - USB Address of the device
 
   Return Values:
     TRUE    - The device is receiving data or an invalid deviceAddress is
@@ -562,7 +563,7 @@ void USBHostGenericTasks( void );
     The device must be connected and enumerated.
 
   Parameters:
-    deviceAddress     - USB Address of the device
+    BYTE deviceAddress	- USB Address of the device
 
   Return Values:
     TRUE    - The device is transmitting data or an invalid deviceAddress
@@ -629,9 +630,9 @@ BOOL USBHostGenericTxIsComplete( BYTE deviceAddress, BYTE *errorCode );
     The device must be connected and enumerated.
 
   Parameters:
-    deviceAddress   - USB Address of the device.
-    buffer          - Pointer to the data buffer
-    length          - Number of bytes to be transferred
+    BYTE deviceAddress   - USB Address of the device.
+    BYTE *buffer         - Pointer to the data buffer
+    DWORD length         - Number of bytes to be transferred
 
   Return Values:
     USB_SUCCESS         - The Write was started successfully

@@ -69,13 +69,20 @@ PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
 IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
 CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 
-Author          Date    Comments
---------------------------------------------------------------------------------
-ADG          15-Sep-2008 First release
-********************************************************************************
  Change History:
- Revision     Description
- v2.6         Changed format of 'bcdCDC' from word to array of byte.
+ Rev     Description
+ ----    ------------------------------------------------
+ 2.6     Changed format of 'bcdCDC' from word to array of byte.
+
+ 2.6a    No change
+
+ 2.7     Modified the code to allow connection of USB-RS232 dongles that do
+         not fully comply with CDC specifications
+
+         Modified API USBHostCDC_Api_Send_OUT_Data to allow data transfers
+         more than 256 bytes
+
+ 2.9     Fixed bug: changed USB_CDC_CONTROL_LINE_LENGTH to 0x00 (was 0x02).		 
 ********************************************************************************/
 //DOM-IGNORE-END
 
@@ -203,12 +210,11 @@ ADG          15-Sep-2008 First release
 #define EVENT_CDC_DATA_WRITE_DONE      EVENT_CDC_BASE + EVENT_CDC_OFFSET + 5   // A CDC Data Write transfer has completed
 #define EVENT_CDC_RESET                EVENT_CDC_BASE + EVENT_CDC_OFFSET + 6   // CDC reset complete
 #define EVENT_CDC_NAK_TIMEOUT          EVENT_CDC_BASE + EVENT_CDC_OFFSET + 7   // CDC device NAK timeout has occurred
-#define freezCDC(x)                        { free(x); x = NULL; }
 
 
 #define USB_CDC_LINE_CODING_LENGTH          0x07   // Number of bytes Line Coding transfer
-#define USB_CDC_CONTROL_LINE_LENGTH         0x02   // Number of bytes Control line transfer
-#define USB_CDC_MAX_PACKET_SIZE             0x40   // Max transfer size is 64 bytes for Full Speed USB
+#define USB_CDC_CONTROL_LINE_LENGTH         0x00   // Number of bytes Control line transfer
+#define USB_CDC_MAX_PACKET_SIZE             0x200   // Max transfer size is 64 bytes for Full Speed USB
 //******************************************************************************
 //******************************************************************************
 // Data Structures
@@ -327,6 +333,7 @@ typedef struct _USB_CDC_DEVICE_INFO
     BYTE*                               userData;              // Data pointer to application buffer.
     WORD                                reportSize;            // Total length of user data
     WORD                                remainingBytes;        // Number bytes remaining to be transferrerd in case user data length is more than 64 bytes
+    WORD                                bytesTransferred;      // Number of bytes transferred to/from the user's data buffer.
     union
     {
         struct
@@ -345,7 +352,6 @@ typedef struct _USB_CDC_DEVICE_INFO
     BYTE                                returnState;           // State to return to after performing error handling.
     BYTE                                noOfInterfaces;        // Total number of interfaces in the device.
     BYTE                                interface;             // Interface number of current transfer.
-    BYTE                                bytesTransferred;      // Number of bytes transferred to/from the user's data buffer.
     BYTE                                endpointDATA;          // Endpoint to use for the current transfer.
     BYTE                                commRequest;           // Current Communication code
     BYTE                                clientDriverID;        // Client driver ID for device requests.

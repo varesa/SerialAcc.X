@@ -74,6 +74,9 @@
    Rev    Description
    ----   ------------------------------------------
    2.6    No Change
+   2.8    Added a couple of additional sense key definitions.
+   2.9    Added definitions for additional error case checks.
+   2.9d   Added definition for MSD_MODE_SENSE_10.
 
  ********************************************************************/
 #ifndef MSD_H
@@ -82,7 +85,7 @@
 /** I N C L U D E S **********************************************************/
 #include "Compiler.h"
 #include "GenericTypeDefs.h"
-#include "MDD File System\FSDefs.h"
+#include "MDD File System/FSDefs.h"
 //#include "SD Card/sdcard.h"
 
 /** D E F I N I T I O N S ****************************************************/
@@ -147,7 +150,7 @@
     #define MSD_READ_10 						0x28
     #define MSD_WRITE_10 						0x2a
     #define MSD_REQUEST_SENSE 					0x03
-    #define MSD_MODE_SENSE 						0x1a
+    #define MSD_MODE_SENSE  					0x1a
     #define MSD_PREVENT_ALLOW_MEDIUM_REMOVAL 	0x1e
     #define MSD_TEST_UNIT_READY 				0x00
     #define MSD_VERIFY 							0x2f
@@ -158,6 +161,10 @@
     #define MSD_READ10_SECTOR                   0x02
     #define MSD_READ10_TX_SECTOR                0x03
     #define MSD_READ10_TX_PACKET                0x04
+    #define MSD_READ10_FETCH_DATA               0x05
+    #define MSD_READ10_XMITING_DATA             0x06
+    #define MSD_READ10_AWAITING_COMPLETION      0x07
+    #define MSD_READ10_ERROR                    0xFF
     
     #define MSD_WRITE10_WAIT                    0x00
     #define MSD_WRITE10_BLOCK                   0x01
@@ -169,14 +176,36 @@
 //attempt to get better throughput.
 //#define MSD_USE_BLOCKING
 
-#define MSD_CSW_SIZE 0x0d	// 10 bytes CSW data
-#define MSD_CBW_SIZE 0x1f	// 31 bytes CBW data
+#define MSD_CSW_SIZE    0x0d	// 10 bytes CSW data
+#define MSD_CBW_SIZE    0x1f	// 31 bytes CBW data
+#define MSD_MAX_CB_SIZE 0x10    //MSD BOT Command Block (CB) size is 16 bytes maximum (bytes 0x0F-0x1E in the CBW)
+#define MSD_CBWFLAGS_RESERVED_BITS_MASK    0x3F //Bits 5..0 of the bCBWFlags byte are reserved, and should be set = 0 by host in order for CBW to be considered meaningful
+
+#define MSD_VALID_CBW_SIGNATURE (DWORD)0x43425355
+#define MSD_VALID_CSW_SIGNATURE (DWORD)0x53425355
+
+//MSDErrorHandler() definitions, see section 6.7 of BOT specifications revision 1.0
+//Note: We re-use values for some of the cases.  This is because the error handling
+//behavior is the same for some of the different test case numbes.
+#define MSD_ERROR_CASE_NO_ERROR         0x00
+#define MSD_ERROR_CASE_2 	            0x01
+#define	MSD_ERROR_CASE_3 	            0x01
+#define MSD_ERROR_CASE_4 	            0x02
+#define	MSD_ERROR_CASE_5 	            0x02
+#define MSD_ERROR_CASE_7 	            0x03
+#define	MSD_ERROR_CASE_8 	            0x03
+#define MSD_ERROR_CASE_9 	            0x04
+#define MSD_ERROR_CASE_11               0x04
+#define	MSD_ERROR_CASE_10               0x05
+#define	MSD_ERROR_CASE_13               0x05
+#define MSD_ERROR_UNSUPPORTED_COMMAND   0x7F
+
 
 #define INVALID_CBW 1
 #define VALID_CBW !INVALID_CBW
 
 /* Sense Key Error Codes */
-
+//------------------------------------------------------------------------------
 #define S_NO_SENSE 0x0
 #define S_RECOVERED_ERROR 0x1
 #define S_NOT_READY 0x2
@@ -196,8 +225,15 @@
 #define S_CURRENT 0x70
 #define S_DEFERRED 0x71
 
-/* ASC ASCQ Codes for Sense Data (only those that we plan to use) */
-// with sense key Illegal request for a command not supported
+//------------------------------------------------------------------------------
+//ASC/ASCQ Codes for Sense Data (only those that we plan to use):
+//The ASC/ASCQ code expand on the information provided in the sense key error 
+//code, and provide the host with more details about the specific issue/status.
+//------------------------------------------------------------------------------
+//For use with sense key Illegal request for a command not supported
+#define ASC_NO_ADDITIONAL_SENSE_INFORMATION 0x00
+#define ASCQ_NO_ADDITIONAL_SENSE_INFORMATION 0x00
+
 #define ASC_INVALID_COMMAND_OPCODE 0x20
 #define ASCQ_INVALID_COMMAND_OPCODE 0x00
 
@@ -206,9 +242,13 @@
 #define ASC_LOGICAL_UNIT_NOT_SUPPORTED 0x25
 #define ASCQ_LOGICAL_UNIT_NOT_SUPPORTED 0x00
 
-// with sense key Not ready
+//For use with sense key Not ready
 #define ASC_LOGICAL_UNIT_DOES_NOT_RESPOND 0x05
 #define ASCQ_LOGICAL_UNIT_DOES_NOT_RESPOND 0x00
+
+//For use with S_UNIT_ATTENTION
+#define ASC_NOT_READY_TO_READY_CHANGE    0x28
+#define ASCQ_MEDIUM_MAY_HAVE_CHANGED    0x00
 
 #define ASC_MEDIUM_NOT_PRESENT 0x3a
 #define ASCQ_MEDIUM_NOT_PRESENT 0x00
@@ -233,6 +273,14 @@
 
 #define ASC_WRITE_PROTECTED 0x27
 #define ASCQ_WRITE_PROTECTED 0x00
+
+
+//Possible command status codes returned in the Command Status Wrapper (CSW)
+#define MSD_CSW_COMMAND_PASSED  0x00
+#define MSD_CSW_COMMAND_FAILED  0x01
+#define MSD_CSW_PHASE_ERROR     0x02
+
+#define MSD_CBW_DIRECTION_BITMASK   0x80
 
 /** S T R U C T U R E S ******************************************************/
 /********************** ******************************************************/
@@ -346,7 +394,7 @@ typedef struct
 	char vendorID[8];	
 	char productID[16];
 	char productRev[4];
-} InquiryResponse;
+} InquiryResponse;      //36 bytes total
 
 typedef struct {
 	BYTE ModeDataLen;
@@ -482,18 +530,62 @@ typedef struct
 } LUN_FUNCTIONS;
 
 /** Section: Externs *********************************************************/
+extern USB_HANDLE USBMSDOutHandle;  
+extern USB_HANDLE USBMSDInHandle;
 extern volatile USB_MSD_CBW msd_cbw;
 extern volatile USB_MSD_CSW msd_csw;
 extern volatile char msd_buffer[512];
 extern BOOL SoftDetach[MAX_LUN + 1];
 extern volatile CTRL_TRF_SETUP SetupPkt;
 extern volatile BYTE CtrlTrfData[USB_EP0_BUFF_SIZE];
-
+extern BOOL MSDCBWValid;
+extern BYTE MSD_State;
 
 /** Section: Public Prototypes ***********************************************/
 void USBCheckMSDRequest(void);
 BYTE MSDTasks(void);
 void USBMSDInit(void);
+
+
+/**************************************************************************
+    Function: BOOL MSDWasLastCBWValid(void)
+    
+    Summary:
+        Returns the BOOLean status of the most recently received command block 
+        wrapper (CBW).  If the last CBW passed the MSD "is valid" tests, then
+        this function will return TRUE.  If the last received CBW was
+        not valid, then the return value will be FALSE.
+    
+    Description:
+        Returns the BOOLean status of the most recently received command block 
+        wrapper (CBW).  If the last CBW passed the "is valid" tests, then
+        this function will return TRUE.  If the last received CBW was
+        not valid, then the return value will be FALSE.  This function would
+        typically be used following a host initiated clear endpoint halt 
+        operation on an MSD bulk IN or OUT endpoint.  In this case, the firmware
+        needs to check if the last received CBW was valid, in order to know
+        if the firmware should re-stall the endpoint following the clear halt.
+        This is necessary to fully comply with the MSD BOT error case handling
+        related specifications, which dicate that the MSD device must 
+        persistently STALL the bulk endpoints when a non-valid CBW is received.
+        The host must issue an MSD reset command over EP0, prior to clear 
+        endpoint halt, in order to clear the stall condition in this special 
+        scenario.
+            
+    Parameters:
+        None
+    
+    Return Values:
+        BOOL:  TRUE - if last received CBW was valid
+               FALSE - if the last received CBW was not valid
+
+    Remarks:
+        None
+
+                    
+  **************************************************************************/
+#define MSDWasLastCBWValid() (MSDCBWValid)
+
 
 /**************************************************************************
     Function:
@@ -536,6 +628,8 @@ void USBMSDInit(void);
                     
   **************************************************************************/
 #define LUNSoftAttach(LUN) SoftDetach[LUN]=FALSE;
+
+
 
 
 #endif

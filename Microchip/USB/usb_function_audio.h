@@ -2,14 +2,8 @@
   File Information:
     FileName:     	usb_function_audio.h
     Dependencies:	See INCLUDES section
-    Processor:		PIC18 or PIC24 USB Microcontrollers
-    Hardware:		The code is natively intended to be used on the following
-    				hardware platforms: PICDEM™ FS USB Demo Board,
-    				PIC18F87J50 FS USB Plug-In Module, or
-    				Explorer 16 + PIC24 USB PIM.  The firmware may be
-    				modified for use on other USB platforms by editing the
-    				HardwareProfile.h file.
-    Complier:  		Microchip C18 (for PIC18) or C30 (for PIC24)
+    Processor:		PIC18, PIC24 or PIC32
+    Complier:  		C18, C30 or C32
     Company:		Microchip Technology, Inc.
 
     Software License Agreement:
@@ -32,17 +26,13 @@
     IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
     CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 
-    Change History:
-     Rev   Date         Description
-     0.1   2/June/2009	Draft
-
   Summary:
     This file contains all of functions, macros, definitions, variables,
-    datatypes, etc. that are required for usage with the AUDIO function
-    driver. This file should be included in projects that use the Audio
+    datatypes, etc. that are required for usage with the USB Device AUDIO 
+    function driver. This file should be included in projects that use the Audio
     \function driver.  This file should also be included into the
     usb_descriptors.c file and any other user file that requires access to the
-    HID interface.
+    USB Device Audio interface.
 
 
 
@@ -50,7 +40,7 @@
     directory.
 
   Description:
-    USB AUDIO Function Driver File
+    USB Device Audio Function Driver File
 
     This file contains all of functions, macros, definitions, variables,
     datatypes, etc. that are required for usage with the AUDIO function
@@ -245,6 +235,30 @@ extern volatile BYTE CtrlTrfData[USB_EP0_BUFF_SIZE];
 
 
 
-/** Section: PUBLIC PROTOTYPES **********************************************/
+/********************************************************************
+    Function:
+ 		void USBCheckAudioRequest(void)
+        
+    Summary:
+ 		This routine checks the setup data packet to see if it
+ 		knows how to handle it
+        
+    Description:
+ 		This routine checks the setup data packet to see if it
+ 		knows how to handle it
+
+    PreCondition:
+        None
+        
+    Parameters:
+		None
+        
+    Return Values:
+		None
+        
+    Remarks:
+        None
+  
+ *******************************************************************/
 void USBCheckAudioRequest(void);
 #endif //AUDIO_H

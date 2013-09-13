@@ -430,8 +430,8 @@ typedef enum {
 
 /****************************************************************************
   Function:
-    BOOL USBHostHID_HasUsage(HID_REPORTITEM *reportItem,WORD usagePage,
-                                          WORD usage,WORD *pindex)
+    BOOL USBHostHID_HasUsage(HID_REPORTITEM *reportItem, WORD usagePage,
+                                          WORD usage, WORD *pindex, BYTE* count)
 
   Description:
     This function is used to locate the usage in a report descriptor.
@@ -448,6 +448,7 @@ typedef enum {
     WORD usage                 - Application needs to pass the usageto be
                                  searched
     WORD *pindex               - returns index to the usage item requested.
+    BYTE* count                - returns the remaining number of reports
 
   Return Values:
     BOOL                       - FALSE - If requested usage is not found

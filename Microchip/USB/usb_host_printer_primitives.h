@@ -57,9 +57,9 @@ KO         ??-???-2008 First release
 #define _USB_HOST_PRINTER_PRIMITIVES_H
 
 
-#include "GenericTypedefs.h"
-#include "USB\usb.h"
-#include "USB\usb_host_printer.h"
+#include "GenericTypeDefs.h"
+#include "USB/usb.h"
+#include "USB/usb_host_printer.h"
 
 
 // *****************************************************************************

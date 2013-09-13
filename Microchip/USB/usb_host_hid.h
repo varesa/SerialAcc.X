@@ -272,7 +272,7 @@ typedef struct _HID_TRANSFER_DATA
     FALSE  -  HID not present or not ready
 
   Remarks:
-    None
+    This function replaces the USBHostHID_ApiDeviceDetect() function.
 *******************************************************************************/
 BOOL USBHostHIDDeviceDetect( BYTE deviceAddress );
 
@@ -301,7 +301,7 @@ BOOL USBHostHIDDeviceDetect( BYTE deviceAddress );
     USB_HID_NORMAL_RUNNING             -  HID Device is running normal, 
                                           ready to send and receive reports 
     USB_HID_DEVICE_HOLDING             -  Driver has encountered error and
-										  could not recover
+                                          could not recover
     USB_HID_DEVICE_DETACHED            -  HID detached.
 
   Remarks:
@@ -369,6 +369,32 @@ BYTE    USBHostHIDDeviceStatus( BYTE deviceAddress );
 *******************************************************************************/
 BYTE    USBHostHIDResetDevice( BYTE deviceAddress );
 
+/****************************************************************************
+  Function:
+    BOOL USBHostHIDResetDeviceWithWait( BYTE deviceAddress  )
+
+  Description:
+    This function resets a HID device, and waits until the reset is complete.
+
+  Precondition:
+    None
+
+  Parameters:
+    BYTE deviceAddress  - Address of the device to reset.
+
+  Return Values:
+    USB_SUCCESS                 - Reset successful
+    USB_HID_RESET_ERROR         - Error while resetting device
+    Others                      - See return values for USBHostHIDResetDevice()
+                                    and error codes that can be returned
+                                    in the errorCode parameter of
+                                    USBHostHIDTransferIsComplete();
+                                    
+  Remarks:
+    None
+  ***************************************************************************/
+BYTE USBHostHIDResetDeviceWithWait( BYTE deviceAddress  );
+
 /*******************************************************************************
   Function:
      void USBHostHIDTasks( void )
@@ -387,7 +413,7 @@ BYTE    USBHostHIDResetDevice( BYTE deviceAddress );
     USBHostHIDInitialize() has been called.
 
   Parameters:
-    None - None
+    None
 
   Returns:
     None
@@ -454,6 +480,9 @@ BYTE USBHostHIDTerminateTransfer( BYTE deviceAddress, BYTE direction, BYTE inter
     USB_HID_DEVICE_NOT_FOUND    - No device with specified address
     USB_HID_DEVICE_BUSY         - Device not in proper state for
                                   performing a transfer
+    Others                      - Return values from USBHostIssueDeviceRequest(),
+                                    USBHostRead(), and USBHostWrite()
+
   Remarks:
     None
 *******************************************************************************/
@@ -614,8 +643,7 @@ BOOL USBHostHID_ApiFindValue(WORD usagePage,WORD usage,HIDReportTypeEnum type,BY
     None
 
   Parameters:
-    BYTE *errorCode     - Error code from last transfer
-    DWORD *byteCount    - Number of bytes transferred
+    None
 
   Return Values:
     TRUE    - Transfer is complete, errorCode is valid
@@ -629,7 +657,7 @@ BYTE USBHostHID_ApiGetCurrentInterfaceNum(void);
 
 /****************************************************************************
   Function:
-    BYTE* USBHostHID_GetCurrentReportInfo()
+    BYTE* USBHostHID_GetCurrentReportInfo(void)
 
   Description:
     This function returns a pointer to the current report info structure.
@@ -641,12 +669,11 @@ BYTE USBHostHID_ApiGetCurrentInterfaceNum(void);
     None
 
   Returns:
-    BYTE *  - Pointer to the report Info structure.
+    BYTE * - Pointer to the report Info structure.
 
   Remarks:
     None
   ***************************************************************************/
-
 #define USBHostHID_GetCurrentReportInfo() (&deviceRptInfo)
 
 
@@ -655,7 +682,7 @@ BYTE USBHostHID_ApiGetCurrentInterfaceNum(void);
     BYTE* USBHostHID_GetItemListPointers()
 
   Description:
-    This function returns a pointer to list of item pointers storedin a
+    This function returns a pointer to list of item pointers stored in a
     structure.
 
   Precondition:
@@ -665,7 +692,7 @@ BYTE USBHostHID_ApiGetCurrentInterfaceNum(void);
     None
 
   Returns:
-    BYTE *  - Pointer to list of item pointers structure.
+    BYTE * - Pointer to list of item pointers structure.
 
   Remarks:
     None
@@ -699,7 +726,7 @@ BYTE USBHostHID_ApiGetCurrentInterfaceNum(void);
   Remarks:
     None
 *******************************************************************************/
-BOOL USBHostHID_ApiImportData(BYTE *report,WORD reportLength,HID_USER_DATA_SIZE *buffer, HID_DATA_DETAILS *pDataDetails);;
+BOOL USBHostHID_ApiImportData(BYTE *report,WORD reportLength,HID_USER_DATA_SIZE *buffer, HID_DATA_DETAILS *pDataDetails);
 
 
 // *****************************************************************************
@@ -707,36 +734,6 @@ BOOL USBHostHID_ApiImportData(BYTE *report,WORD reportLength,HID_USER_DATA_SIZE 
 // Section: USB Host Callback Function Prototypes
 // *****************************************************************************
 // *****************************************************************************
-
-/*******************************************************************************
-  Function:
-    BOOL USBHostHIDInitialize( BYTE address, WORD flags, BYTE clientDriverID )
-
-  Summary:
-    This function is the initialization routine for this client driver.
-
-  Description:
-    This function is the initialization routine for this client driver.  It
-    is called by the host layer when the USB device is being enumerated.For a 
-    HID device we need to look into HID descriptor, interface descriptor and 
-    endpoint descriptor.
-
-  Precondition:
-    None
-
-  Parameters:
-    BYTE address        - Address of the new device
-    DWORD flags          - Initialization flags
-    BYTE clientDriverID - Client driver identification for device requests
-
-  Return Values:
-    TRUE   - We can support the device.
-    FALSE  - We cannot support the device.
-
-  Remarks:
-    None
-*******************************************************************************/
-BOOL USBHostHIDInitialize( BYTE address, DWORD flags, BYTE clientDriverID );
 
 /*******************************************************************************
   Function:
@@ -770,6 +767,36 @@ BOOL USBHostHIDEventHandler( BYTE address, USB_EVENT event, void *data, DWORD si
 
 
 
+
+/*******************************************************************************
+  Function:
+    BOOL USBHostHIDInitialize( BYTE address, DWORD flags, BYTE clientDriverID )
+
+  Summary:
+    This function is the initialization routine for this client driver.
+
+  Description:
+    This function is the initialization routine for this client driver.  It
+    is called by the host layer when the USB device is being enumerated.For a 
+    HID device we need to look into HID descriptor, interface descriptor and 
+    endpoint descriptor.
+
+  Precondition:
+    None
+
+  Parameters:
+    BYTE address        - Address of the new device
+    DWORD flags          - Initialization flags
+    BYTE clientDriverID - Client driver identification for device requests
+
+  Return Values:
+    TRUE   - We can support the device.
+    FALSE  - We cannot support the device.
+
+  Remarks:
+    None
+*******************************************************************************/
+BOOL USBHostHIDInitialize( BYTE address, DWORD flags, BYTE clientDriverID );
 // *****************************************************************************
 // *****************************************************************************
 // Section: Legacy Macros 
