@@ -3,7 +3,7 @@
  Dependencies:	See INCLUDES section
  Processor:		PIC18 or PIC24 USB Microcontrollers
  Hardware:		The code is natively intended to be used on the following
- 				hardware platforms: PICDEM™ FS USB Demo Board, 
+ 				hardware platforms: PICDEMï¿½ FS USB Demo Board, 
  				PIC18F87J50 FS USB Plug-In Module, or
  				Explorer 16 + PIC24 USB PIM.  The firmware may be
  				modified for use on other USB platforms by editing the
@@ -14,8 +14,8 @@
  Software License Agreement:
 
  The software supplied herewith by Microchip Technology Incorporated
- (the “Company”) for its PIC® Microcontroller is intended and
- supplied to you, the Company’s customer, for use solely and
+ (the ï¿½Companyï¿½) for its PICï¿½ Microcontroller is intended and
+ supplied to you, the Companyï¿½s customer, for use solely and
  exclusively on Microchip PIC Microcontroller products. The
  software is owned by the Company and/or its supplier, and is
  protected under applicable copyright laws. All rights are reserved.
@@ -24,7 +24,7 @@
  civil liability for the breach of the terms and conditions of this
  license.
 
- THIS SOFTWARE IS PROVIDED IN AN “AS IS” CONDITION. NO WARRANTIES,
+ THIS SOFTWARE IS PROVIDED IN AN ï¿½AS ISï¿½ CONDITION. NO WARRANTIES,
  WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
  TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
  PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
@@ -155,8 +155,8 @@ state according to the definition in the USB specification.
 #define __USB_DESCRIPTORS_C
 
 /** INCLUDES *******************************************************/
-#include "./USB/usb.h"
-#include "./USB/usb_function_hid.h"
+#include "Microchip/USB/usb.h"
+#include "Microchip/USB/usb_function_cdc.h"
 
 /** CONSTANTS ******************************************************/
 #if defined(__18CXX)
@@ -200,27 +200,71 @@ ROM BYTE configDescriptor1[]={
     0,                      // Interface Number
     0,                      // Alternate Setting Number
     1,                      // Number of endpoints in this intf
-    HID_INTF,               // Class code
-    BOOT_INTF_SUBCLASS,     // Subclass code
-    HID_PROTOCOL_MOUSE,     // Protocol code
+    COMM_INTF,               // Class code
+    ABSTRACT_CONTROL_MODEL,     // Subclass code
+    V25TER,     // Protocol code
     0,                      // Interface string index
 
-    /* HID Class-Specific Descriptor */
-    0x09,//sizeof(USB_HID_DSC)+3,    // Size of this descriptor in bytes RRoj hack
-    DSC_HID,                // HID descriptor type
-    DESC_CONFIG_WORD(0x0111),                 // HID Spec Release Number in BCD format (1.11)
-    0x00,                   // Country Code (0x00 for Not supported)
-    HID_NUM_OF_DSC,         // Number of class descriptors, see usbcfg.h
-    DSC_RPT,                // Report descriptor type
-    DESC_CONFIG_WORD(50),   //sizeof(hid_rpt01),      // Size of the report descriptor
+/* CDC Class-Specific Descriptors */
+    sizeof(USB_CDC_HEADER_FN_DSC),
+    CS_INTERFACE,
+    DSC_FN_HEADER,
+    0x10,0x01,
+
+    sizeof(USB_CDC_ACM_FN_DSC),
+    CS_INTERFACE,
+    DSC_FN_ACM,
+    USB_CDC_ACM_FN_DSC_VAL,
+
+    sizeof(USB_CDC_UNION_FN_DSC),
+    CS_INTERFACE,
+    DSC_FN_UNION,
+    CDC_COMM_INTF_ID,
+    CDC_DATA_INTF_ID,
+
+    sizeof(USB_CDC_CALL_MGT_FN_DSC),
+    CS_INTERFACE,
+    DSC_FN_CALL_MGT,
+    0x00,
+    CDC_DATA_INTF_ID,
     
     /* Endpoint Descriptor */
+    //sizeof(USB_EP_DSC),DSC_EP,_EP02_IN,_INT,CDC_INT_EP_SIZE,0x02,
     0x07,/*sizeof(USB_EP_DSC)*/
     USB_DESCRIPTOR_ENDPOINT,    //Endpoint Descriptor
-    HID_EP | _EP_IN,            //EndpointAddress
+    _EP01_IN,            //EndpointAddress
     _INTERRUPT,                       //Attributes
-    DESC_CONFIG_WORD(3),                  //size
-    0x01                        //Interval
+    0x08,0x00,                  //size
+    0x02,                       //Interval
+
+    /* Interface Descriptor */
+    9,//sizeof(USB_INTF_DSC),   // Size of this descriptor in bytes
+    USB_DESCRIPTOR_INTERFACE,               // INTERFACE descriptor type
+    1,                      // Interface Number
+    0,                      // Alternate Setting Number
+    2,                      // Number of endpoints in this intf
+    DATA_INTF,              // Class code
+    0,                      // Subclass code
+    NO_PROTOCOL,            // Protocol code
+    0,                      // Interface string index
+
+    /* Endpoint Descriptor */
+    //sizeof(USB_EP_DSC),DSC_EP,_EP03_OUT,_BULK,CDC_BULK_OUT_EP_SIZE,0x00,
+    0x07,/*sizeof(USB_EP_DSC)*/
+    USB_DESCRIPTOR_ENDPOINT,    //Endpoint Descriptor
+    _EP02_OUT,            //EndpointAddress
+    _BULK,                       //Attributes
+    0x40,0x00,                  //size
+    0x00,                       //Interval
+
+    /* Endpoint Descriptor */
+    //sizeof(USB_EP_DSC),DSC_EP,_EP03_IN,_BULK,CDC_BULK_IN_EP_SIZE,0x00
+    0x07,/*sizeof(USB_EP_DSC)*/
+    USB_DESCRIPTOR_ENDPOINT,    //Endpoint Descriptor
+    _EP02_IN,            //EndpointAddress
+    _BULK,                       //Attributes
+    0x40,0x00,                  //size
+    0x00,                       //Interval
 };
 
 
@@ -243,43 +287,13 @@ sizeof(sd002),USB_DESCRIPTOR_STRING,
 'C','i','r','c','l','e',' ','D','e','m','o'
 }};
 
-//Class specific descriptor - HID mouse
-ROM struct{BYTE report[HID_RPT01_SIZE];}hid_rpt01={
-    {0x05, 0x01, /* Usage Page (Generic Desktop)             */
-    0x09, 0x02, /* Usage (Mouse)                            */
-    0xA1, 0x01, /* Collection (Application)                 */
-    0x09, 0x01, /*  Usage (Pointer)                         */
-    0xA1, 0x00, /*  Collection (Physical)                   */
-    0x05, 0x09, /*      Usage Page (Buttons)                */
-    0x19, 0x01, /*      Usage Minimum (01)                  */
-    0x29, 0x03, /*      Usage Maximum (03)                  */
-    0x15, 0x00, /*      Logical Minimum (0)                 */
-    0x25, 0x01, /*      Logical Maximum (0)                 */
-    0x95, 0x03, /*      Report Count (3)                    */
-    0x75, 0x01, /*      Report Size (1)                     */
-    0x81, 0x02, /*      Input (Data, Variable, Absolute)    */
-    0x95, 0x01, /*      Report Count (1)                    */
-    0x75, 0x05, /*      Report Size (5)                     */
-    0x81, 0x01, /*      Input (Constant)    ;5 bit padding  */
-    0x05, 0x01, /*      Usage Page (Generic Desktop)        */
-    0x09, 0x30, /*      Usage (X)                           */
-    0x09, 0x31, /*      Usage (Y)                           */
-    0x15, 0x81, /*      Logical Minimum (-127)              */
-    0x25, 0x7F, /*      Logical Maximum (127)               */
-    0x75, 0x08, /*      Report Size (8)                     */
-    0x95, 0x02, /*      Report Count (2)                    */
-    0x81, 0x06, /*      Input (Data, Variable, Relative)    */
-    0xC0, 0xC0}
-};/* End Collection,End Collection            */
-
 //Array of configuration descriptors
 ROM BYTE *ROM USB_CD_Ptr[]=
 {
     (ROM BYTE *ROM)&configDescriptor1
 };
-
 //Array of string descriptors
-ROM BYTE *ROM USB_SD_Ptr[]=
+ROM BYTE *ROM USB_SD_Ptr[USB_NUM_STRING_DESCRIPTORS]=
 {
     (ROM BYTE *ROM)&sd000,
     (ROM BYTE *ROM)&sd001,

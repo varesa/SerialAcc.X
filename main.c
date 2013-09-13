@@ -8,10 +8,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "Microchip/USB/usb_common.h"
+
 /*
  * 
  */
 int main(int argc, char** argv) {
+    USBInitialize();
 
     return (EXIT_SUCCESS);
 }
