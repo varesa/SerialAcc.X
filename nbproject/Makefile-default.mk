@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=main.c usb_descriptors.c usb_io.c Microchip/Common/debug_ram_buffer.c Microchip/Common/TimeDelay.c "Microchip/USB/CDC Device Driver/usb_function_cdc.c" "Microchip/USB/Generic Device Driver/usb_function_generic.c" Microchip/USB/usb_device.c
+SOURCEFILES_QUOTED_IF_SPACED=Microchip/Common/debug_ram_buffer.c Microchip/Common/TimeDelay.c "Microchip/USB/CDC Device Driver/usb_function_cdc.c" "Microchip/USB/Generic Device Driver/usb_function_generic.c" Microchip/USB/usb_device.c main.c usb_descriptors.c usb_io.c i2c_mpu.c msg_buffer.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_io.o ${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o ${OBJECTDIR}/Microchip/Common/TimeDelay.o "${OBJECTDIR}/Microchip/USB/CDC Device Driver/usb_function_cdc.o" "${OBJECTDIR}/Microchip/USB/Generic Device Driver/usb_function_generic.o" ${OBJECTDIR}/Microchip/USB/usb_device.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/usb_descriptors.o.d ${OBJECTDIR}/usb_io.o.d ${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o.d ${OBJECTDIR}/Microchip/Common/TimeDelay.o.d "${OBJECTDIR}/Microchip/USB/CDC Device Driver/usb_function_cdc.o.d" "${OBJECTDIR}/Microchip/USB/Generic Device Driver/usb_function_generic.o.d" ${OBJECTDIR}/Microchip/USB/usb_device.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o ${OBJECTDIR}/Microchip/Common/TimeDelay.o "${OBJECTDIR}/Microchip/USB/CDC Device Driver/usb_function_cdc.o" "${OBJECTDIR}/Microchip/USB/Generic Device Driver/usb_function_generic.o" ${OBJECTDIR}/Microchip/USB/usb_device.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_io.o ${OBJECTDIR}/i2c_mpu.o ${OBJECTDIR}/msg_buffer.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o.d ${OBJECTDIR}/Microchip/Common/TimeDelay.o.d "${OBJECTDIR}/Microchip/USB/CDC Device Driver/usb_function_cdc.o.d" "${OBJECTDIR}/Microchip/USB/Generic Device Driver/usb_function_generic.o.d" ${OBJECTDIR}/Microchip/USB/usb_device.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/usb_descriptors.o.d ${OBJECTDIR}/usb_io.o.d ${OBJECTDIR}/i2c_mpu.o.d ${OBJECTDIR}/msg_buffer.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_io.o ${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o ${OBJECTDIR}/Microchip/Common/TimeDelay.o ${OBJECTDIR}/Microchip/USB/CDC\ Device\ Driver/usb_function_cdc.o ${OBJECTDIR}/Microchip/USB/Generic\ Device\ Driver/usb_function_generic.o ${OBJECTDIR}/Microchip/USB/usb_device.o
+OBJECTFILES=${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o ${OBJECTDIR}/Microchip/Common/TimeDelay.o ${OBJECTDIR}/Microchip/USB/CDC\ Device\ Driver/usb_function_cdc.o ${OBJECTDIR}/Microchip/USB/Generic\ Device\ Driver/usb_function_generic.o ${OBJECTDIR}/Microchip/USB/usb_device.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_io.o ${OBJECTDIR}/i2c_mpu.o ${OBJECTDIR}/msg_buffer.o
 
 # Source Files
-SOURCEFILES=main.c usb_descriptors.c usb_io.c Microchip/Common/debug_ram_buffer.c Microchip/Common/TimeDelay.c Microchip/USB/CDC Device Driver/usb_function_cdc.c Microchip/USB/Generic Device Driver/usb_function_generic.c Microchip/USB/usb_device.c
+SOURCEFILES=Microchip/Common/debug_ram_buffer.c Microchip/Common/TimeDelay.c Microchip/USB/CDC Device Driver/usb_function_cdc.c Microchip/USB/Generic Device Driver/usb_function_generic.c Microchip/USB/usb_device.c main.c usb_descriptors.c usb_io.c i2c_mpu.c msg_buffer.c
 
 
 CFLAGS=
@@ -91,24 +91,6 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR} 
-	@${RM} ${OBJECTDIR}/main.o.d 
-	@${RM} ${OBJECTDIR}/main.o 
-	@${FIXDEPS} "${OBJECTDIR}/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c   
-	
-${OBJECTDIR}/usb_descriptors.o: usb_descriptors.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR} 
-	@${RM} ${OBJECTDIR}/usb_descriptors.o.d 
-	@${RM} ${OBJECTDIR}/usb_descriptors.o 
-	@${FIXDEPS} "${OBJECTDIR}/usb_descriptors.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/usb_descriptors.o.d" -o ${OBJECTDIR}/usb_descriptors.o usb_descriptors.c   
-	
-${OBJECTDIR}/usb_io.o: usb_io.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR} 
-	@${RM} ${OBJECTDIR}/usb_io.o.d 
-	@${RM} ${OBJECTDIR}/usb_io.o 
-	@${FIXDEPS} "${OBJECTDIR}/usb_io.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/usb_io.o.d" -o ${OBJECTDIR}/usb_io.o usb_io.c   
-	
 ${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o: Microchip/Common/debug_ram_buffer.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/Microchip/Common 
 	@${RM} ${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o.d 
@@ -139,25 +121,37 @@ ${OBJECTDIR}/Microchip/USB/usb_device.o: Microchip/USB/usb_device.c  nbproject/M
 	@${RM} ${OBJECTDIR}/Microchip/USB/usb_device.o 
 	@${FIXDEPS} "${OBJECTDIR}/Microchip/USB/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Microchip/USB/usb_device.o.d" -o ${OBJECTDIR}/Microchip/USB/usb_device.o Microchip/USB/usb_device.c   
 	
-else
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
-	@${FIXDEPS} "${OBJECTDIR}/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c   
+	@${FIXDEPS} "${OBJECTDIR}/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c   
 	
 ${OBJECTDIR}/usb_descriptors.o: usb_descriptors.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/usb_descriptors.o.d 
 	@${RM} ${OBJECTDIR}/usb_descriptors.o 
-	@${FIXDEPS} "${OBJECTDIR}/usb_descriptors.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/usb_descriptors.o.d" -o ${OBJECTDIR}/usb_descriptors.o usb_descriptors.c   
+	@${FIXDEPS} "${OBJECTDIR}/usb_descriptors.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/usb_descriptors.o.d" -o ${OBJECTDIR}/usb_descriptors.o usb_descriptors.c   
 	
 ${OBJECTDIR}/usb_io.o: usb_io.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/usb_io.o.d 
 	@${RM} ${OBJECTDIR}/usb_io.o 
-	@${FIXDEPS} "${OBJECTDIR}/usb_io.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/usb_io.o.d" -o ${OBJECTDIR}/usb_io.o usb_io.c   
+	@${FIXDEPS} "${OBJECTDIR}/usb_io.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/usb_io.o.d" -o ${OBJECTDIR}/usb_io.o usb_io.c   
 	
+${OBJECTDIR}/i2c_mpu.o: i2c_mpu.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/i2c_mpu.o.d 
+	@${RM} ${OBJECTDIR}/i2c_mpu.o 
+	@${FIXDEPS} "${OBJECTDIR}/i2c_mpu.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/i2c_mpu.o.d" -o ${OBJECTDIR}/i2c_mpu.o i2c_mpu.c   
+	
+${OBJECTDIR}/msg_buffer.o: msg_buffer.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/msg_buffer.o.d 
+	@${RM} ${OBJECTDIR}/msg_buffer.o 
+	@${FIXDEPS} "${OBJECTDIR}/msg_buffer.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/msg_buffer.o.d" -o ${OBJECTDIR}/msg_buffer.o msg_buffer.c   
+	
+else
 ${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o: Microchip/Common/debug_ram_buffer.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/Microchip/Common 
 	@${RM} ${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o.d 
@@ -187,6 +181,36 @@ ${OBJECTDIR}/Microchip/USB/usb_device.o: Microchip/USB/usb_device.c  nbproject/M
 	@${RM} ${OBJECTDIR}/Microchip/USB/usb_device.o.d 
 	@${RM} ${OBJECTDIR}/Microchip/USB/usb_device.o 
 	@${FIXDEPS} "${OBJECTDIR}/Microchip/USB/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Microchip/USB/usb_device.o.d" -o ${OBJECTDIR}/Microchip/USB/usb_device.o Microchip/USB/usb_device.c   
+	
+${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/main.o.d 
+	@${RM} ${OBJECTDIR}/main.o 
+	@${FIXDEPS} "${OBJECTDIR}/main.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c   
+	
+${OBJECTDIR}/usb_descriptors.o: usb_descriptors.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/usb_descriptors.o.d 
+	@${RM} ${OBJECTDIR}/usb_descriptors.o 
+	@${FIXDEPS} "${OBJECTDIR}/usb_descriptors.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/usb_descriptors.o.d" -o ${OBJECTDIR}/usb_descriptors.o usb_descriptors.c   
+	
+${OBJECTDIR}/usb_io.o: usb_io.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/usb_io.o.d 
+	@${RM} ${OBJECTDIR}/usb_io.o 
+	@${FIXDEPS} "${OBJECTDIR}/usb_io.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/usb_io.o.d" -o ${OBJECTDIR}/usb_io.o usb_io.c   
+	
+${OBJECTDIR}/i2c_mpu.o: i2c_mpu.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/i2c_mpu.o.d 
+	@${RM} ${OBJECTDIR}/i2c_mpu.o 
+	@${FIXDEPS} "${OBJECTDIR}/i2c_mpu.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/i2c_mpu.o.d" -o ${OBJECTDIR}/i2c_mpu.o i2c_mpu.c   
+	
+${OBJECTDIR}/msg_buffer.o: msg_buffer.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/msg_buffer.o.d 
+	@${RM} ${OBJECTDIR}/msg_buffer.o 
+	@${FIXDEPS} "${OBJECTDIR}/msg_buffer.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/msg_buffer.o.d" -o ${OBJECTDIR}/msg_buffer.o msg_buffer.c   
 	
 endif
 

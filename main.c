@@ -17,42 +17,54 @@
 
 #include "configwords.h"
 #include "usb_config.h"
+#include "msg_buffer.h"
+
+#include "i2c_mpu.h"
+#include "HardwareProfile - PIC32MX795F512L PIM.h"
 
 
 
 int main(int argc, char** argv) {
-    USBInitialize();
+    #if defined(__32MX460F512L__)|| defined(__32MX795F512L__)
+    // Configure the PIC32 core for the best performance
+    // at the operating frequency. The operating frequency is already set to
+    // 60MHz through Device Config Registers
+    SYSTEMConfigPerformance(60000000);
+    #endif
+    USBDeviceInit();
 
-    int i = 1;
+    BOOL mpu_uninitialized = TRUE;
+
+    int i = 0;
 
     while(TRUE) {
 
         USBDeviceTasks();
-
-
-        char buffer[64];
-        getsUSBUSART(buffer, 64);
-
-        if(USBUSARTIsTxTrfReady()) {
-            switch(i) {
-                case 0:
-                    putrsUSBUSART("Ab\r\n");
-                    i++;
-                    break;
-                case 1:
-                    putrsUSBUSART("cdE\r\n");
-                    i = 0;
-                    break;
-                default:
-                    i--;
-                    break;
-            }
-
-
-            //CDCTxService();
-        }
+        if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1)) continue;
 
         CDCTxService();
+
+        if(i < 1000000) {   // A delay to work around something
+            i++;            // (Slowness in terminal program?)
+            continue;
+        }
+
+        if(mpu_uninitialized) {
+            //if(!USBUSARTIsTxTrfReady()) continue;
+            appendBuffer("INFO: USB Accelerometer started up\r\n");
+            MPU_init();
+            mpu_uninitialized = FALSE;
+        }
+
+        if(USBUSARTIsTxTrfReady()) {
+            if(dataInBuffer) {
+                putrsUSBUSART(msg_buffer);
+                dataInBuffer = FALSE;
+            }
+            //putrsUSBUSART("Test\r\n");
+        }
+
+        
     }
 
     return (EXIT_SUCCESS);
