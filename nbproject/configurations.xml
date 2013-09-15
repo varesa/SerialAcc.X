@@ -73,6 +73,47 @@
       <itemPath>i2c_mpu.c</itemPath>
       <itemPath>msg_buffer.c</itemPath>
     </logicalFolder>
+    <logicalFolder name="umpl" displayName="umpl" projectFiles="true">
+      <logicalFolder name="accel" displayName="accel" projectFiles="true">
+        <itemPath>umpl/accel/mpu6050.c</itemPath>
+      </logicalFolder>
+      <itemPath>umpl/accel.c</itemPath>
+      <itemPath>umpl/checksum.c</itemPath>
+      <itemPath>umpl/compass.c</itemPath>
+      <itemPath>umpl/compass_debug.c</itemPath>
+      <itemPath>umpl/compass_supervisor.c</itemPath>
+      <itemPath>umpl/compass_supervisor_lite_callbacks.c</itemPath>
+      <itemPath>umpl/dmpDefaultMantis.c</itemPath>
+      <itemPath>umpl/key0_96.c</itemPath>
+      <itemPath>umpl/log_pic24.c</itemPath>
+      <itemPath>umpl/ml.c</itemPath>
+      <itemPath>umpl/mlarray_lite.c</itemPath>
+      <itemPath>umpl/mlBiasNoMotion.c</itemPath>
+      <itemPath>umpl/mlcontrol.c</itemPath>
+      <itemPath>umpl/mldl.c</itemPath>
+      <itemPath>umpl/mldl_cfg.c</itemPath>
+      <itemPath>umpl/mldl_cfg_init_umpl_6050a2.c</itemPath>
+      <itemPath>umpl/mldmp.c</itemPath>
+      <itemPath>umpl/mlFIFO.c</itemPath>
+      <itemPath>umpl/mlFIFOHW.c</itemPath>
+      <itemPath>umpl/mlMathFunc.c</itemPath>
+      <itemPath>umpl/mlos_pic24.c</itemPath>
+      <itemPath>umpl/mlSetGyroBias.c</itemPath>
+      <itemPath>umpl/mlsl_pic24.c</itemPath>
+      <itemPath>umpl/mlstates.c</itemPath>
+      <itemPath>umpl/mlsupervisor.c</itemPath>
+      <itemPath>umpl/ml_init.c</itemPath>
+      <itemPath>umpl/ml_invobj.c</itemPath>
+      <itemPath>umpl/ml_mputest.c</itemPath>
+      <itemPath>umpl/mputest.c</itemPath>
+      <itemPath>umpl/pressure.c</itemPath>
+      <itemPath>umpl/temp_comp_u.c</itemPath>
+      <itemPath>umpl/umpl-setup.c</itemPath>
+      <itemPath>umpl/umpl-states.c</itemPath>
+      <itemPath>umpl/ustore_lite_fusion_delegate.c</itemPath>
+      <itemPath>umpl/ustore_manager.c</itemPath>
+      <itemPath>umpl/ustore_pic24.c</itemPath>
+    </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
@@ -81,6 +122,7 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>Microchip</Elem>
+    <Elem>umpl</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

@@ -17,7 +17,9 @@
 #define I2C_READ 1
 #define I2C_WRITE 0
 
-void MPU_init(void);
+void I2C_init(void);
+//static inline
+void platform_init(void);
 //TODO: MPU_getData();
 
 #endif	/* I2C_MPU_H */
