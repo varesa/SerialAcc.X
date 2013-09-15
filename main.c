@@ -19,16 +19,6 @@
 #include "usb_config.h"
 #include "msg_buffer.h"
 
-//  Motion library includes
-#include "umpl/ml.h"
-#include "umpl/mldl.h"
-//#include "ml_stored_data.h"
-#include "umpl/mlmath.h"
-#include "umpl/packet.h"
-#include "umpl/mltypes.h"
-#include "umpl/mlos.h"
-#include "umpl/mldl_cfg.h"
-#include "umpl/umpl-states.h"
 
 #include "i2c_mpu.h"
 #include "HardwareProfile - PIC32MX795F512L PIM.h"
@@ -64,7 +54,6 @@ int main(int argc, char** argv) {
             //if(!USBUSARTIsTxTrfReady()) continue;
             appendBuffer("INFO: USB Accelerometer started up\r\n");
             I2C_init();
-            platform_init();
             mpu_uninitialized = FALSE;
         }
 

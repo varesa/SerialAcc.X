@@ -180,18 +180,5 @@
 								LED6_IO = !!(a & 0x40);\
 								LED7_IO = !!(a & 0x80);\
 
-        #define UMPL
-        #define BOARD MCHPREVA
-        #define UMPL_ELIMINATE_ADVFUSION
-        #define INV_FEATURE_GYROTC_UTC
-        #define DMPDEFAULT_UNSORTEDKEYLOOKUP
-        #define INV_CACHE_DMP 0
-        #define UMPL_DISABLE_STORE_CAL
-        #define UMPL_DISABLE_LOAD_CAL
-        #define LITTLE_ENDIAN
-        #define INV_UMPL 1
-        #define UMPL_ENABLE_TEMPCOMP
-        #define CONFIG_MPU_SENSORS_MPU6050B1
-
 
 #endif  //HARDWARE_PROFILE_PIC32MX795F512L_PIM_H
