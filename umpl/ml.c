@@ -1741,26 +1741,10 @@ inv_error_t inv_set_mpu_sensors(unsigned long sensors)
         return INV_ERROR_FEATURE_NOT_IMPLEMENTED;
     }
 
-    //TEST:
-    int test = EXT_SLAVE_TYPE_ACCEL;
-
-    struct ext_slave_platform_data** data;
-    data = mldl_cfg->pdata_slave;
-    int index = EXT_SLAVE_TYPE_ACCEL;
-    int x = 0;
-    struct ext_slave_platform_data** *data2 = data[index];
-    if(data2) {
-        x = 1;
-    }
-
-
-    int a = ((sensors & INV_THREE_AXIS_ACCEL) != 0);
-    int b = (!mldl_cfg->pdata_slave[EXT_SLAVE_TYPE_ACCEL]);
-
-    if (((sensors & INV_THREE_AXIS_ACCEL) != 0) &&
+    /*if (((sensors & INV_THREE_AXIS_ACCEL) != 0) &&
         (!mldl_cfg->pdata_slave[EXT_SLAVE_TYPE_ACCEL])) {
         return INV_ERROR_SERIAL_DEVICE_NOT_RECOGNIZED;
-    }
+    }*/
 
     if (((sensors & INV_THREE_AXIS_COMPASS) != INV_THREE_AXIS_COMPASS) &&
         ((sensors & INV_THREE_AXIS_COMPASS) != 0)) {
