@@ -180,5 +180,9 @@
 								LED6_IO = !!(a & 0x40);\
 								LED7_IO = !!(a & 0x80);\
 
+        /* IMU SETTINGS */
+        #define EMPL_TARGET_PIC32
+        #define MPU6050
+
 
 #endif  //HARDWARE_PROFILE_PIC32MX795F512L_PIM_H

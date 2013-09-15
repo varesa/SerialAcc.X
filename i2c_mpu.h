@@ -11,16 +11,14 @@
 #include "Microchip/GenericTypeDefs.h"
 
 #define I2C_DEV I2C2
-#define MPU_ADDR 0x68
 #define I2C_SPEED 400000
 
-#define I2C_READ 1
-#define I2C_WRITE 0
 
 void I2C_init(void);
-//static inline
-void platform_init(void);
-//TODO: MPU_getData();
+int i2c_write(unsigned char addr, unsigned char reg, unsigned char length, unsigned char *data);
+int i2c_read(unsigned char addr, unsigned char reg, unsigned char length, unsigned char *data);
+int get_ms(unsigned long *count);
+
 
 #endif	/* I2C_MPU_H */
 

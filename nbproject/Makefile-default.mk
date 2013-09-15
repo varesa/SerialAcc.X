@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=Microchip/Common/debug_ram_buffer.c Microchip/Common/TimeDelay.c "Microchip/USB/CDC Device Driver/usb_function_cdc.c" "Microchip/USB/Generic Device Driver/usb_function_generic.c" Microchip/USB/usb_device.c main.c usb_descriptors.c usb_io.c i2c_mpu.c msg_buffer.c eMPL/inv_mpu.c eMPL/inv_mpu_dmp_motion_driver.c
+SOURCEFILES_QUOTED_IF_SPACED=Microchip/Common/debug_ram_buffer.c Microchip/Common/TimeDelay.c "Microchip/USB/CDC Device Driver/usb_function_cdc.c" "Microchip/USB/Generic Device Driver/usb_function_generic.c" Microchip/USB/usb_device.c eMPL/inv_mpu.c eMPL/inv_mpu_dmp_motion_driver.c main.c usb_descriptors.c usb_io.c i2c_mpu.c msg_buffer.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o ${OBJECTDIR}/Microchip/Common/TimeDelay.o "${OBJECTDIR}/Microchip/USB/CDC Device Driver/usb_function_cdc.o" "${OBJECTDIR}/Microchip/USB/Generic Device Driver/usb_function_generic.o" ${OBJECTDIR}/Microchip/USB/usb_device.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_io.o ${OBJECTDIR}/i2c_mpu.o ${OBJECTDIR}/msg_buffer.o ${OBJECTDIR}/eMPL/inv_mpu.o ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o.d ${OBJECTDIR}/Microchip/Common/TimeDelay.o.d "${OBJECTDIR}/Microchip/USB/CDC Device Driver/usb_function_cdc.o.d" "${OBJECTDIR}/Microchip/USB/Generic Device Driver/usb_function_generic.o.d" ${OBJECTDIR}/Microchip/USB/usb_device.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/usb_descriptors.o.d ${OBJECTDIR}/usb_io.o.d ${OBJECTDIR}/i2c_mpu.o.d ${OBJECTDIR}/msg_buffer.o.d ${OBJECTDIR}/eMPL/inv_mpu.o.d ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o ${OBJECTDIR}/Microchip/Common/TimeDelay.o "${OBJECTDIR}/Microchip/USB/CDC Device Driver/usb_function_cdc.o" "${OBJECTDIR}/Microchip/USB/Generic Device Driver/usb_function_generic.o" ${OBJECTDIR}/Microchip/USB/usb_device.o ${OBJECTDIR}/eMPL/inv_mpu.o ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_io.o ${OBJECTDIR}/i2c_mpu.o ${OBJECTDIR}/msg_buffer.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o.d ${OBJECTDIR}/Microchip/Common/TimeDelay.o.d "${OBJECTDIR}/Microchip/USB/CDC Device Driver/usb_function_cdc.o.d" "${OBJECTDIR}/Microchip/USB/Generic Device Driver/usb_function_generic.o.d" ${OBJECTDIR}/Microchip/USB/usb_device.o.d ${OBJECTDIR}/eMPL/inv_mpu.o.d ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/usb_descriptors.o.d ${OBJECTDIR}/usb_io.o.d ${OBJECTDIR}/i2c_mpu.o.d ${OBJECTDIR}/msg_buffer.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o ${OBJECTDIR}/Microchip/Common/TimeDelay.o ${OBJECTDIR}/Microchip/USB/CDC\ Device\ Driver/usb_function_cdc.o ${OBJECTDIR}/Microchip/USB/Generic\ Device\ Driver/usb_function_generic.o ${OBJECTDIR}/Microchip/USB/usb_device.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_io.o ${OBJECTDIR}/i2c_mpu.o ${OBJECTDIR}/msg_buffer.o ${OBJECTDIR}/eMPL/inv_mpu.o ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o
+OBJECTFILES=${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o ${OBJECTDIR}/Microchip/Common/TimeDelay.o ${OBJECTDIR}/Microchip/USB/CDC\ Device\ Driver/usb_function_cdc.o ${OBJECTDIR}/Microchip/USB/Generic\ Device\ Driver/usb_function_generic.o ${OBJECTDIR}/Microchip/USB/usb_device.o ${OBJECTDIR}/eMPL/inv_mpu.o ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o ${OBJECTDIR}/main.o ${OBJECTDIR}/usb_descriptors.o ${OBJECTDIR}/usb_io.o ${OBJECTDIR}/i2c_mpu.o ${OBJECTDIR}/msg_buffer.o
 
 # Source Files
-SOURCEFILES=Microchip/Common/debug_ram_buffer.c Microchip/Common/TimeDelay.c Microchip/USB/CDC Device Driver/usb_function_cdc.c Microchip/USB/Generic Device Driver/usb_function_generic.c Microchip/USB/usb_device.c main.c usb_descriptors.c usb_io.c i2c_mpu.c msg_buffer.c eMPL/inv_mpu.c eMPL/inv_mpu_dmp_motion_driver.c
+SOURCEFILES=Microchip/Common/debug_ram_buffer.c Microchip/Common/TimeDelay.c Microchip/USB/CDC Device Driver/usb_function_cdc.c Microchip/USB/Generic Device Driver/usb_function_generic.c Microchip/USB/usb_device.c eMPL/inv_mpu.c eMPL/inv_mpu_dmp_motion_driver.c main.c usb_descriptors.c usb_io.c i2c_mpu.c msg_buffer.c
 
 
 CFLAGS=
@@ -121,6 +121,18 @@ ${OBJECTDIR}/Microchip/USB/usb_device.o: Microchip/USB/usb_device.c  nbproject/M
 	@${RM} ${OBJECTDIR}/Microchip/USB/usb_device.o 
 	@${FIXDEPS} "${OBJECTDIR}/Microchip/USB/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Microchip/USB/usb_device.o.d" -o ${OBJECTDIR}/Microchip/USB/usb_device.o Microchip/USB/usb_device.c   
 	
+${OBJECTDIR}/eMPL/inv_mpu.o: eMPL/inv_mpu.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/eMPL 
+	@${RM} ${OBJECTDIR}/eMPL/inv_mpu.o.d 
+	@${RM} ${OBJECTDIR}/eMPL/inv_mpu.o 
+	@${FIXDEPS} "${OBJECTDIR}/eMPL/inv_mpu.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/eMPL/inv_mpu.o.d" -o ${OBJECTDIR}/eMPL/inv_mpu.o eMPL/inv_mpu.c   
+	
+${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o: eMPL/inv_mpu_dmp_motion_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/eMPL 
+	@${RM} ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d 
+	@${RM} ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d" -o ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o eMPL/inv_mpu_dmp_motion_driver.c   
+	
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/main.o.d 
@@ -150,18 +162,6 @@ ${OBJECTDIR}/msg_buffer.o: msg_buffer.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/msg_buffer.o.d 
 	@${RM} ${OBJECTDIR}/msg_buffer.o 
 	@${FIXDEPS} "${OBJECTDIR}/msg_buffer.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/msg_buffer.o.d" -o ${OBJECTDIR}/msg_buffer.o msg_buffer.c   
-	
-${OBJECTDIR}/eMPL/inv_mpu.o: eMPL/inv_mpu.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/eMPL 
-	@${RM} ${OBJECTDIR}/eMPL/inv_mpu.o.d 
-	@${RM} ${OBJECTDIR}/eMPL/inv_mpu.o 
-	@${FIXDEPS} "${OBJECTDIR}/eMPL/inv_mpu.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/eMPL/inv_mpu.o.d" -o ${OBJECTDIR}/eMPL/inv_mpu.o eMPL/inv_mpu.c   
-	
-${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o: eMPL/inv_mpu_dmp_motion_driver.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/eMPL 
-	@${RM} ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d 
-	@${RM} ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o 
-	@${FIXDEPS} "${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d" -o ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o eMPL/inv_mpu_dmp_motion_driver.c   
 	
 else
 ${OBJECTDIR}/Microchip/Common/debug_ram_buffer.o: Microchip/Common/debug_ram_buffer.c  nbproject/Makefile-${CND_CONF}.mk
@@ -194,6 +194,18 @@ ${OBJECTDIR}/Microchip/USB/usb_device.o: Microchip/USB/usb_device.c  nbproject/M
 	@${RM} ${OBJECTDIR}/Microchip/USB/usb_device.o 
 	@${FIXDEPS} "${OBJECTDIR}/Microchip/USB/usb_device.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Microchip/USB/usb_device.o.d" -o ${OBJECTDIR}/Microchip/USB/usb_device.o Microchip/USB/usb_device.c   
 	
+${OBJECTDIR}/eMPL/inv_mpu.o: eMPL/inv_mpu.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/eMPL 
+	@${RM} ${OBJECTDIR}/eMPL/inv_mpu.o.d 
+	@${RM} ${OBJECTDIR}/eMPL/inv_mpu.o 
+	@${FIXDEPS} "${OBJECTDIR}/eMPL/inv_mpu.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/eMPL/inv_mpu.o.d" -o ${OBJECTDIR}/eMPL/inv_mpu.o eMPL/inv_mpu.c   
+	
+${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o: eMPL/inv_mpu_dmp_motion_driver.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/eMPL 
+	@${RM} ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d 
+	@${RM} ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o 
+	@${FIXDEPS} "${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d" -o ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o eMPL/inv_mpu_dmp_motion_driver.c   
+	
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR} 
 	@${RM} ${OBJECTDIR}/main.o.d 
@@ -223,18 +235,6 @@ ${OBJECTDIR}/msg_buffer.o: msg_buffer.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/msg_buffer.o.d 
 	@${RM} ${OBJECTDIR}/msg_buffer.o 
 	@${FIXDEPS} "${OBJECTDIR}/msg_buffer.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/msg_buffer.o.d" -o ${OBJECTDIR}/msg_buffer.o msg_buffer.c   
-	
-${OBJECTDIR}/eMPL/inv_mpu.o: eMPL/inv_mpu.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/eMPL 
-	@${RM} ${OBJECTDIR}/eMPL/inv_mpu.o.d 
-	@${RM} ${OBJECTDIR}/eMPL/inv_mpu.o 
-	@${FIXDEPS} "${OBJECTDIR}/eMPL/inv_mpu.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/eMPL/inv_mpu.o.d" -o ${OBJECTDIR}/eMPL/inv_mpu.o eMPL/inv_mpu.c   
-	
-${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o: eMPL/inv_mpu_dmp_motion_driver.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} ${OBJECTDIR}/eMPL 
-	@${RM} ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d 
-	@${RM} ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o 
-	@${FIXDEPS} "${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o.d" -o ${OBJECTDIR}/eMPL/inv_mpu_dmp_motion_driver.o eMPL/inv_mpu_dmp_motion_driver.c   
 	
 endif
 

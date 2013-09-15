@@ -24,6 +24,8 @@
 #include <math.h>
 #include "inv_mpu.h"
 
+
+#include "../HardwareProfile.h"
 /* The following functions must be defined for this platform:
  * i2c_write(unsigned char slave_addr, unsigned char reg_addr,
  *      unsigned char length, unsigned char const *data)
@@ -101,6 +103,19 @@
     /* UC3 is a 32-bit processor, so abs and labs are equivalent. */
     #define labs        abs
     #define fabs(x)     (((x)>0)?(x):-(x))
+#elif defined EMPL_TARGET_PIC32
+    #include "p32xxxx.h"
+
+    #include "../i2c_mpu.h"
+    #include "../msg_buffer.h"
+
+    #define log_i usbPrintf
+    #define log_e usbPrintf
+    #define delay_ms DelayMs
+
+    #define reg_int_cb(a) Nop()
+    //@todo: look into interrupts
+
 #else
     #error  Gyro driver is missing the system layer implementations.
 #endif
@@ -692,8 +707,11 @@ int mpu_init(struct int_param_s *int_param)
 {
     unsigned char data[6], rev;
 
+    int d = st.hw->addr;
+
     /* Reset device. */
     data[0] = BIT_RESET;
+    d = 0x68;
     if (i2c_write(st.hw->addr, st.reg->pwr_mgmt_1, 1, data))
         return -1;
     delay_ms(100);
