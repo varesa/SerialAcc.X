@@ -22,13 +22,10 @@ void I2C_init() {
 
     actualClock = I2CSetFrequency(I2C_DEV, GetPeripheralClock(), I2C_SPEED);
     if(abs(actualClock-I2C_SPEED) > I2C_SPEED*0.1) {
-        appendBuffer("ERROR: Could not set I2C clock\r\n");
     } else {
-        appendBuffer("INFO: I2C Clock set\r\n");
     }
     
     I2CEnable(I2C_DEV, TRUE);
-    appendBuffer("INFO: I2C Enabled\r\n");
 }
 
 static BOOL StartTransfer( BOOL restart )
@@ -174,14 +171,10 @@ int i2c_write(unsigned char addr, unsigned char reg, unsigned char length, unsig
         TransmitOneByte(data[0]);
         if(i != length) {
             *data = *data<<8;
-            appendBuffer("Doing a multi-byte write\r\n");
         }
     }
     StopTransfer();
 
-    
-
-    usbPrintf("A: %02X R: %02X D: %02X", addr, reg, data[0]);
     return 0;
 }
 
@@ -207,7 +200,6 @@ int i2c_read(unsigned char addr, unsigned char reg, unsigned char length, unsign
 
         if(i != length) {
             //*data = *data<<8;
-            appendBuffer("Doing a multi-byte read\r\n");
         } else {
             I2CStop(I2C2);
         }
