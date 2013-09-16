@@ -83,12 +83,10 @@ static inline unsigned short inv_orientation_matrix_to_scalar(
     return scalar;
 }
 
-void initSensor() {
+void initSensor() { //TODO: Copy-paste the working i2c code from olimex demo to here.
         unsigned short gyro_rate, gyro_fsr;
     unsigned char accel_fsr;
 
-    //if(!USBUSARTIsTxTrfReady()) continue;
-    appendBuffer("INFO: USB Accelerometer started up\r\n");
     I2C_init();
     mpu_init((void *)0);
 
