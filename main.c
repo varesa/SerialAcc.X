@@ -90,7 +90,6 @@ int main(int argc, char** argv) {
     // 60MHz through Device Config Registers
     SYSTEMConfigPerformance(60000000);
     #endif
-    USBDeviceInit();
 
     int mpu_init_stage = 0;
 
@@ -100,17 +99,6 @@ int main(int argc, char** argv) {
     unsigned char accel_fsr;
 
     while(TRUE) {
-
-        USBDeviceTasks();
-        if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1)) continue;
-
-        CDCTxService();
-
-        if(i < 1000000) {   // A delay to work around something
-            i++;            // (Slowness in terminal program?)
-            continue;
-        }
-
         if (mpu_init_stage == 2) {
             dmp_load_motion_driver_firmware();
             dmp_set_orientation(
@@ -147,14 +135,6 @@ int main(int argc, char** argv) {
             I2C_init();
             mpu_init((void *)0);
             mpu_init_stage = 1;
-        }
-
-
-        if(USBUSARTIsTxTrfReady()) {
-            if(dataInBuffer) {
-                putrsUSBUSART(msg_buffer);
-                dataInBuffer = FALSE;
-            }
         }
         
     }
