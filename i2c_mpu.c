@@ -1,4 +1,6 @@
+#include <xc.h>
 #include <p32xxxx.h>
+#include <sys/attribs.h>
 
 #include "i2c_mpu.h"
 #include "HardwareProfile - PIC32MX795F512L PIM.h"
@@ -12,151 +14,89 @@
 #include "msg_buffer.h"
 #include "eMPL/inv_mpu.h"
 
-#define WRITE & 0
-#define READ | 1
 
-void I2C_init() {
-    int actualClock;
+enum HWSTATE HWState;
+enum STAGE Stage;
+struct PACKAGE Package;
+int DATA_READY;
 
-    I2CConfigure(I2C_DEV, 0);
-
-    actualClock = I2CSetFrequency(I2C_DEV, GetPeripheralClock(), I2C_SPEED);
-    if(abs(actualClock-I2C_SPEED) > I2C_SPEED*0.1) {
-    } else {
+void __ISR(_I2C2_VECTOR, IPL7AUTO) I2CInterrupt(void) {
+    switch(HWState) {
+        case START:
+            HWState = TRANSMIT;
+            ACTION_REQUIRED = 1;
+            break;
+        case TRANSMIT:
+            if (Package.index > Package.length) {
+                HWState = STOP;
+            }
+            ACTION_REQUIRED = 1;
+            break;
+        case STOP:
+            HWState = IDLE;
+            break;
     }
-    
-    I2CEnable(I2C_DEV, TRUE);
+
+    INTClearFlag(INT_I2C2);
 }
 
-static BOOL StartTransfer( BOOL restart )
-{
-    I2C_STATUS  status;
+void I2C_init() {
 
-    // Send the Start (or Restart) signal
-    if(restart)
-    {
-        I2CRepeatStart(I2C2);
+    I2C2CONbits.ON = 1; // Enable I2C2
+    I2C2BRG = 90;       // Set speed to 400 kH
+
+    HWState = IDLE;
+    DATA_READY = 0;
+    ACTION_REQUIRED = 0;
+
+    INTEnable(INT_I2C2, TRUE);
+}
+
+void I2C_Tasks() {
+    if(!(DATA_READY || ACTION_REQUIRED)) {
+        return; // Nothing to do
     }
-    else
-    {
-        // Wait for the bus to be idle, then start the transfer
-        while( !I2CBusIsIdle(I2C2) );
 
-        if(I2CStart(I2C2) != I2C2)
-        {
-            DBPRINTF("Error: Bus collision during transfer Start\n");
-            return FALSE;
+    if(DATA_READY) {
+        if(HWState == IDLE) {
+            DATA_READY = 0;
+            HWState = START;
         }
     }
 
-    // Wait for the signal to complete
-    do
-    {
-
-        status = I2CGetStatus(I2C2);
-
-    } while ( !(status & I2C_START) );
-
-    return TRUE;
-}
-
-
-/*******************************************************************************
-  Function:
-    BOOL TransmitOneByte( UINT8 data )
-
-  Summary:
-    This transmits one byte to the EEPROM.
-
-  Description:
-    This transmits one byte to the EEPROM, and reports errors for any bus
-    collisions.
-
-  Precondition:
-    The transfer must have been previously started.
-
-  Parameters:
-    data    - Data byte to transmit
-
-  Returns:
-    TRUE    - Data was sent successfully
-    FALSE   - A bus collision occured
-
-  Example:
-    <code>
-    TransmitOneByte(0xAA);
-    </code>
-
-  Remarks:
-    This is a blocking routine that waits for the transmission to complete.
-  *****************************************************************************/
-
-static BOOL TransmitOneByte( UINT8 data )
-{
-    // Wait for the transmitter to be ready
-    while(!I2CTransmitterIsReady(I2C2));
-
-    // Transmit the byte
-    if(I2CSendByte(I2C2, data) == I2C_MASTER_BUS_COLLISION)
-    {
-        DBPRINTF("Error: I2C Master Bus Collision\n");
-        return FALSE;
+    switch(HWState) {
+        case START:
+            I2C2CONbits.SEN = 1;
+            break;
+        case TRANSMIT:
+            I2C2TRN = Package.data[Package.index];
+            break;
+        case STOP:
+            I2C2CONbits.PEN = 1;
+            break;
     }
-
-    // Wait for the transmission to finish
-    while(!I2CTransmissionHasCompleted(I2C2));
-
-    return TRUE;
-}
-
-
-/*******************************************************************************
-  Function:
-    void StopTransfer( void )
-
-  Summary:
-    Stops a transfer to/from the EEPROM.
-
-  Description:
-    This routine Stops a transfer to/from the EEPROM, waiting (in a
-    blocking loop) until the Stop condition has completed.
-
-  Precondition:
-    The I2C module must have been initialized & a transfer started.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    StopTransfer();
-    </code>
-
-  Remarks:
-    This is a blocking routine that waits for the Stop signal to complete.
-  *****************************************************************************/
-
-static void StopTransfer( void )
-{
-    I2C_STATUS  status;
-
-    // Send the Stop signal
-    I2CStop(I2C2);
-
-
-    // Wait for the signal to complete
-    do
-    {
-        status = I2CGetStatus(I2C2);
-
-    } while ( !(status & I2C_STOP) );
 }
 
 int i2c_write(unsigned char addr, unsigned char reg, unsigned char length, unsigned char *data) {
-    while( !I2CBusIsIdle(I2C2) ); //@todo: implement I2c error checking
+    while(HWState != IDLE) {
+        I2C_Tasks();
+    }
+
+    Package.address = addr;
+    Package.reg = reg;
+    Package.data = data;
+    Package.length = length;
+    Package.direction = WRITE;
+
+    Stage = ADDRESS;
+
+    DATA_READY = 1;
+
+    I2C_Tasks();
+    while(HWState != IDLE) {
+        I2C_Tasks();
+    }
+    /*while( !I2CBusIsIdle(I2C2) ); //@todo: implement I2c error checking
     StartTransfer(FALSE);
     //TransmitOneByte((addr<<1) WRITE);
     TransmitOneByte(addr);
@@ -175,11 +115,11 @@ int i2c_write(unsigned char addr, unsigned char reg, unsigned char length, unsig
     }
     StopTransfer();
 
-    return 0;
+    return 0;*/
 }
 
 int i2c_read(unsigned char addr, unsigned char reg, unsigned char length, unsigned char *data) {
-    StartTransfer(FALSE);
+    /*StartTransfer(FALSE);
     TransmitOneByte(addr);// << 1 WRITE);
     TransmitOneByte(reg);
     StartTransfer(TRUE);
@@ -204,7 +144,7 @@ int i2c_read(unsigned char addr, unsigned char reg, unsigned char length, unsign
             I2CStop(I2C2);
         }
     }
-    return 0;
+    return 0;*/
 }
 
 int get_ms(unsigned long *count) {

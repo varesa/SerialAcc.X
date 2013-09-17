@@ -121,6 +121,7 @@ int main(int argc, char** argv) {
     // at the operating frequency. The operating frequency is already set to
     // 60MHz through Device Config Registers
     SYSTEMConfigPerformance(60000000);
+    INTEnableSystemMultiVectoredInt();
     #endif
 
     initSensor();

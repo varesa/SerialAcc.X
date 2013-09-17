@@ -707,11 +707,8 @@ int mpu_init(struct int_param_s *int_param)
 {
     unsigned char data[6], rev;
 
-    int d = st.hw->addr;
-
     /* Reset device. */
     data[0] = BIT_RESET;
-    d = 0x68;
     if (i2c_write(st.hw->addr, st.reg->pwr_mgmt_1, 1, data))
         return -1;
     delay_ms(100);
