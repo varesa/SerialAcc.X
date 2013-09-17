@@ -15,23 +15,40 @@
 #define WRITE & 0
 #define READ | 1
 
-void I2C_init() {
-    int actualClock;
 
-    I2CConfigure(I2C_DEV, 0);
+/*******************************************************************************
+  Function:
+    BOOL StartTransfer( BOOL restart )
 
-    actualClock = I2CSetFrequency(I2C_DEV, GetPeripheralClock(), I2C_SPEED);
-    if(abs(actualClock-I2C_SPEED) > I2C_SPEED*0.1) {
-        appendBuffer("ERROR: Could not set I2C clock\r\n");
-    } else {
-        appendBuffer("INFO: I2C Clock set\r\n");
-    }
-    
-    I2CEnable(I2C_DEV, TRUE);
-    appendBuffer("INFO: I2C Enabled\r\n");
-}
+  Summary:
+    Starts (or restarts) a transfer to/from the EEPROM.
 
-static BOOL StartTransfer( BOOL restart )
+  Description:
+    This routine starts (or restarts) a transfer to/from the EEPROM, waiting (in
+    a blocking loop) until the start (or re-start) condition has completed.
+
+  Precondition:
+    The I2C module must have been initialized.
+
+  Parameters:
+    restart - If FALSE, send a "Start" condition
+            - If TRUE, send a "Restart" condition
+
+  Returns:
+    TRUE    - If successful
+    FALSE   - If a collision occured during Start signaling
+
+  Example:
+
+    StartTransfer(FALSE);
+
+
+  Remarks:
+    This is a blocking routine that waits for the bus to be idle and the Start
+    (or Restart) signal to complete.
+  *****************************************************************************/
+
+BOOL StartTransfer( BOOL restart )
 {
     I2C_STATUS  status;
 
@@ -45,7 +62,7 @@ static BOOL StartTransfer( BOOL restart )
         // Wait for the bus to be idle, then start the transfer
         while( !I2CBusIsIdle(I2C2) );
 
-        if(I2CStart(I2C2) != I2C2)
+        if(I2CStart(I2C2) != I2C_SUCCESS)
         {
             DBPRINTF("Error: Bus collision during transfer Start\n");
             return FALSE;
@@ -55,14 +72,12 @@ static BOOL StartTransfer( BOOL restart )
     // Wait for the signal to complete
     do
     {
-
         status = I2CGetStatus(I2C2);
 
     } while ( !(status & I2C_START) );
 
     return TRUE;
 }
-
 
 /*******************************************************************************
   Function:
@@ -86,15 +101,15 @@ static BOOL StartTransfer( BOOL restart )
     FALSE   - A bus collision occured
 
   Example:
-    <code>
+
     TransmitOneByte(0xAA);
-    </code>
+
 
   Remarks:
     This is a blocking routine that waits for the transmission to complete.
   *****************************************************************************/
 
-static BOOL TransmitOneByte( UINT8 data )
+BOOL TransmitOneByte( UINT8 data )
 {
     // Wait for the transmitter to be ready
     while(!I2CTransmitterIsReady(I2C2));
@@ -111,7 +126,6 @@ static BOOL TransmitOneByte( UINT8 data )
 
     return TRUE;
 }
-
 
 /*******************************************************************************
   Function:
@@ -134,21 +148,20 @@ static BOOL TransmitOneByte( UINT8 data )
     None.
 
   Example:
-    <code>
+
     StopTransfer();
-    </code>
+
 
   Remarks:
     This is a blocking routine that waits for the Stop signal to complete.
   *****************************************************************************/
 
-static void StopTransfer( void )
+void StopTransfer( void )
 {
     I2C_STATUS  status;
 
     // Send the Stop signal
     I2CStop(I2C2);
-
 
     // Wait for the signal to complete
     do
@@ -158,10 +171,10 @@ static void StopTransfer( void )
     } while ( !(status & I2C_STOP) );
 }
 
+
 int i2c_write(unsigned char addr, unsigned char reg, unsigned char length, unsigned char *data) {
     while( !I2CBusIsIdle(I2C2) ); //@todo: implement I2c error checking
     StartTransfer(FALSE);
-    //TransmitOneByte((addr<<1) WRITE);
     TransmitOneByte(addr);
     StopTransfer();
     return 0;
@@ -169,19 +182,11 @@ int i2c_write(unsigned char addr, unsigned char reg, unsigned char length, unsig
     TransmitOneByte(reg);
 
     int i;
-    for(i = 1; i <= length; i++) {
-        //TransmitOneByte((*data>>(length-i)*8) & 255);
-        TransmitOneByte(data[0]);
-        if(i != length) {
-            *data = *data<<8;
-            appendBuffer("Doing a multi-byte write\r\n");
-        }
+    for(i = 0; i < length; i++) {
+        TransmitOneByte(data[i]);
     }
     StopTransfer();
 
-    
-
-    usbPrintf("A: %02X R: %02X D: %02X", addr, reg, data[0]);
     return 0;
 }
 
@@ -192,18 +197,18 @@ int i2c_read(unsigned char addr, unsigned char reg, unsigned char length, unsign
     StartTransfer(TRUE);
     
     int i;
-    for(i = 1; i <= length; i++) {
+    for(i = 0; i < length; i++) {
         I2CReceiverEnable(I2C2, TRUE);
 	while(!I2CReceivedDataIsAvailable(I2C2));
-        if(i == length) {
+        if(i == length-1) {
             I2CAcknowledgeByte(I2C2, FALSE);
         } else {
             I2CAcknowledgeByte(I2C2, TRUE);
         }
-        
-        //*data = *data | I2CGetByte(I2C2);
-        unsigned char byte = I2CGetByte(I2C2);
-        data[i] = &byte;
+
+        /*unsigned char byte = I2CGetByte(I2C2);
+        data[i] = &byte;*/
+        data[i] = I2CGetByte(I2C2);
 
         if(i != length) {
             //*data = *data<<8;
@@ -217,4 +222,32 @@ int i2c_read(unsigned char addr, unsigned char reg, unsigned char length, unsign
 
 int get_ms(unsigned long *count) {
     *count = 7; //@todo: implement the clock counter
+}
+
+
+void I2C_init() {
+    int actualClock;
+
+    I2CConfigure(I2C_DEV, 0);
+
+    actualClock = I2CSetFrequency(I2C_DEV, GetPeripheralClock(), I2C_SPEED);
+    if(abs(actualClock-I2C_SPEED) > I2C_SPEED*0.1) {
+        appendBuffer("ERROR: Could not set I2C clock\r\n");
+    } else {
+        appendBuffer("INFO: I2C Clock set\r\n");
+    }
+
+    I2CEnable(I2C_DEV, TRUE);
+    appendBuffer("INFO: I2C Enabled\r\n");
+
+    /*StartTransfer(FALSE); // Read power management register
+    TransmitOneByte((0x68 << 1) & 0b11111110);
+    TransmitOneByte(0x75);
+    StartTransfer(TRUE);
+    TransmitOneByte((0x68 << 1) | 0b00000001);
+    I2CReceiverEnable(I2C_DEV, TRUE);
+    while(!I2CReceivedDataIsAvailable(I2C_DEV));
+    I2CAcknowledgeByte(I2C_DEV, FALSE);
+    I2CGetByte(I2C_DEV);
+    StopTransfer();*/
 }
