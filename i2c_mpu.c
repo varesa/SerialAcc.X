@@ -12,10 +12,6 @@
 #include "msg_buffer.h"
 #include "eMPL/inv_mpu.h"
 
-#define WRITE & 0
-#define READ | 1
-
-
 /*******************************************************************************
   Function:
     BOOL StartTransfer( BOOL restart )
@@ -173,12 +169,9 @@ void StopTransfer( void )
 
 
 int i2c_write(unsigned char addr, unsigned char reg, unsigned char length, unsigned char *data) {
-    while( !I2CBusIsIdle(I2C2) ); //@todo: implement I2c error checking
+    while( !I2CBusIsIdle(I2C2) );
     StartTransfer(FALSE);
-    TransmitOneByte(addr);
-    StopTransfer();
-    return 0;
-
+    TransmitOneByte((addr<<1) & 0b11111110);
     TransmitOneByte(reg);
 
     int i;
@@ -192,9 +185,11 @@ int i2c_write(unsigned char addr, unsigned char reg, unsigned char length, unsig
 
 int i2c_read(unsigned char addr, unsigned char reg, unsigned char length, unsigned char *data) {
     StartTransfer(FALSE);
-    TransmitOneByte(addr);// << 1 WRITE);
+    TransmitOneByte((addr<<1) & 0b11111110);
     TransmitOneByte(reg);
+    
     StartTransfer(TRUE);
+    TransmitOneByte((addr<<1) | 0b00000001);
     
     int i;
     for(i = 0; i < length; i++) {
@@ -206,17 +201,9 @@ int i2c_read(unsigned char addr, unsigned char reg, unsigned char length, unsign
             I2CAcknowledgeByte(I2C2, TRUE);
         }
 
-        /*unsigned char byte = I2CGetByte(I2C2);
-        data[i] = &byte;*/
         data[i] = I2CGetByte(I2C2);
-
-        if(i != length) {
-            //*data = *data<<8;
-            appendBuffer("Doing a multi-byte read\r\n");
-        } else {
-            I2CStop(I2C2);
-        }
     }
+    StopTransfer();
     return 0;
 }
 
@@ -240,11 +227,34 @@ void I2C_init() {
     I2CEnable(I2C_DEV, TRUE);
     appendBuffer("INFO: I2C Enabled\r\n");
 
-    /*StartTransfer(FALSE); // Read power management register
-    TransmitOneByte((0x68 << 1) & 0b11111110);
+    /*if(!StartTransfer(FALSE)) {
+        while(1);
+    }
+    
+    if(!TransmitOneByte((0x68 << 1) & 0b11111110)) {
+        while(1);
+    }
+
+    if(!I2CByteWasAcknowledged(I2C_DEV)) {
+        while(1);
+    }
+
     TransmitOneByte(0x75);
-    StartTransfer(TRUE);
+
+
+    if(!I2CByteWasAcknowledged(I2C_DEV)) {
+        while(1);
+    }
+
+    if(!StartTransfer(TRUE)) {
+        while(1);
+    }
     TransmitOneByte((0x68 << 1) | 0b00000001);
+
+    if(!I2CByteWasAcknowledged(I2C_DEV)) {
+        while(1);
+    }
+
     I2CReceiverEnable(I2C_DEV, TRUE);
     while(!I2CReceivedDataIsAvailable(I2C_DEV));
     I2CAcknowledgeByte(I2C_DEV, FALSE);

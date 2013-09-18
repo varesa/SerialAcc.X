@@ -77,9 +77,9 @@
 // this is the address of flash where web configurations will be stored
 #define	APP_CONFIG_ADDRESS	0x1D004000
 
-#define SYS_CLOCK 					(80000000ul)
+#define SYS_CLOCK 					(80000000L)
 #define GetSystemClock()            (SYS_CLOCK)
-#define GetPeripheralClock()        (SYS_CLOCK/2)
+#define GetPeripheralClock()        (SYS_CLOCK)
 #define GetInstructionClock()       (SYS_CLOCK)
 
 /*********************************************************************
