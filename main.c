@@ -28,6 +28,22 @@
 #include "i2c_mpu.h"
 #include "HardwareProfile - PIC32MX795F512L PIM.h"
 
+struct rx_s {
+    unsigned char header[3];
+    unsigned char cmd;
+};
+struct hal_s {
+    unsigned char sensors;
+    unsigned char dmp_on;
+    unsigned char wait_for_tap;
+    volatile unsigned char new_gyro;
+    unsigned short report;
+    unsigned short dmp_features;
+    unsigned char motion_int_mode;
+    struct rx_s rx;
+};
+static struct hal_s hal = {0};
+
 /* The sensors can be mounted onto the board in any orientation. The mounting
  * matrix seen below tells the MPL how to rotate the raw data from thei
  * driver(s).
@@ -122,61 +138,70 @@ int main(int argc, char** argv) {
 
         CDCTxService();
 
-        if (mpu_init_stage == 2) {
-//            dmp_load_motion_driver_firmware();
-//            dmp_set_orientation(
-//                inv_orientation_matrix_to_scalar(gyro_orientation));
-//            //dmp_register_tap_cb(tap_cb);
-//            //dmp_register_android_orient_cb(android_orient_cb);
-//            //hal.dmp_features = DMP_FEATURE_6X_LP_QUAT | //DMP_FEATURE_TAP |
-//            //    DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO |
-//            //    DMP_FEATURE_GYRO_CAL;
-//            //dmp_enable_feature(hal.dmp_features); //@todo: look into HAL
-//            dmp_set_fifo_rate(100);
-//            mpu_set_dmp_state(1);
-//            //hal.dmp_on = 1;
-            mpu_init_stage = 3;
-            appendBuffer("INFO: MPU Initialization stage 3 complete\r\n");
-            appendBuffer("01234567891011121314151617181920\r\n");
-            //appendBuffer("LONG LONG LONG LONG LONG LONG LONG LONG Message test...10\r\n");
-            //("LONG LONG LONG LONG LONG LONG LONG LONG Message test...11\r\n");
-            //appendBuffer("LONG LONG LONG LONG LONG LONG LONG LONG Message test...12\r\n");
-            //appendBuffer("LONG LONG LONG LONG LONG LONG LONG LONG Message test...13\r\n");*/
+        switch (mpu_init_stage) {
+            case 0:
+                appendBuffer("INFO: USB Accelerometer started up\r\n");
+                I2C_init();
+                mpu_init((void *)0);
+                appendBuffer("INFO: MPU Initialization stage 1 complete\r\n");
+
+                mpu_init_stage = 1;
+                break;
+            case 1:
+                /* Get/set hardware configuration. Start gyro. */
+                /* Wake up all sensors. */
+                mpu_set_sensors(INV_XYZ_GYRO | INV_XYZ_ACCEL);
+                /* Push both gyro and accel data into the FIFO. */
+                mpu_configure_fifo(INV_XYZ_GYRO | INV_XYZ_ACCEL);
+                mpu_set_sample_rate(100);
+                /* Read back configuration in case it was set improperly. */
+                mpu_get_sample_rate(&gyro_rate);
+                mpu_get_gyro_fsr(&gyro_fsr);
+                mpu_get_accel_fsr(&accel_fsr);
+                appendBuffer("INFO: MPU Initialization stage 2 complete\r\n");
+
+                mpu_init_stage = 2;
+                break;
+            case 2:
+                dmp_load_motion_driver_firmware();
+                dmp_set_orientation(
+                    inv_orientation_matrix_to_scalar(gyro_orientation));
+                //dmp_register_tap_cb(tap_cb);
+                //dmp_register_android_orient_cb(android_orient_cb);
+                hal.dmp_features = DMP_FEATURE_SEND_RAW_GYRO;
+                //hal.dmp_features = DMP_FEATURE_6X_LP_QUAT; //| DMP_FEATURE_TAP |
+                //    DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO |
+                //    DMP_FEATURE_GYRO_CAL;
+                dmp_enable_feature(hal.dmp_features); //@todo: look into HAL
+                dmp_set_fifo_rate(100);
+                mpu_set_dmp_state(1);
+                hal.dmp_on = 1;
+                appendBuffer("INFO: MPU Initialization stage 3 complete\r\n");
+                appendBuffer("01234567891011121314151617181920\r\n");
+
+                mpu_init_stage = 3;
+                break;
+            case 3:
+            {
+                short gyro[3];
+                short accel[3];
+                long quat[6];
+                unsigned long timestamp;
+                short sensors;
+                unsigned char more;
+                int a = gyro[0];
+                int b = gyro[1];
+                int c = gyro[2];
+                if(dmp_read_fifo(gyro, accel, quat, &timestamp, &sensors, &more) == 0) {
+                    if(!(sensors & INV_XYZ_GYRO)) {
+                        break;
+                    }
+                    usbPrintf("G %i %i %i\r\n", a, b, c);
+                }
+                break;
+            }
         }
 
-        if (mpu_init_stage == 1) {
-//            /* Get/set hardware configuration. Start gyro. */
-//            /* Wake up all sensors. */
-//            mpu_set_sensors(INV_XYZ_GYRO | INV_XYZ_ACCEL);
-//            /* Push both gyro and accel data into the FIFO. */
-//            mpu_configure_fifo(INV_XYZ_GYRO | INV_XYZ_ACCEL);
-//            mpu_set_sample_rate(100);
-//            /* Read back configuration in case it was set improperly. */
-//            mpu_get_sample_rate(&gyro_rate);
-//            mpu_get_gyro_fsr(&gyro_fsr);
-//            mpu_get_accel_fsr(&accel_fsr);
-            appendBuffer("INFO: MPU Initialization stage 2 complete\r\n");
-            //appendBuffer("LONG LONG LONG LONG LONG LONG LONG LONG Message test...5\r\n");
-            //appendBuffer("LONG LONG LONG LONG LONG LONG LONG LONG Message test...6\r\n");
-            //appendBuffer("LONG LONG LONG LONG LONG LONG LONG LONG Message test...7\r\n");
-            //appendBuffer("LONG LONG LONG LONG LONG LONG LONG LONG Message test...8\r\n");
-            //appendBuffer("LONG LONG LONG LONG LONG LONG LONG LONG Message test...9\r\n");*/
-
-            mpu_init_stage = 2;
-        }
-
-        if(mpu_init_stage == 0) {
-            //if(!USBUSARTIsTxTrfReady()) continue;
-            appendBuffer("INFO: USB Accelerometer started up\r\n");
-//            I2C_init();
-//            mpu_init((void *)0);
-            mpu_init_stage = 1;
-            appendBuffer("INFO: MPU Initialization stage 1 complete\r\n");
-            appendBuffer("LONG LONG LONG LONG LONG LONG LONG LONG Message test...1\r\n");
-            //appendBuffer("LONG LONG LONG LONG LONG LONG LONG LONG Message test...2\r\n");
-            //appendBuffer("LONG LONG LONG LONG LONG LONG LONG LONG Message test...3\r\n");
-            //appendBuffer("LONG LONG LONG LONG LONG LONG LONG LONG Message test...4\r\n");*/
-        }
 
         /*if(j > 10000) {
             j = 0;
@@ -187,18 +212,23 @@ int main(int argc, char** argv) {
         }*/
 
 
-        if(USBUSARTIsTxTrfReady()) {
-            if(dataInBuffer) {
-                char tmp[265] ={0};
-                sprintf(tmp, "%s", msg_buffer);
-                putrsUSBUSART(tmp);
-
-                //msg_buffer[0] = '\0';
-                memset(&msg_buffer[0], 0, sizeof(msg_buffer));
-                //strcpy(msg_buffer, "");
-                dataInBuffer = FALSE;
-            }
+        while(!USBUSARTIsTxTrfReady()) {
+            USBDeviceTasks();
+            CDCTxService();
         }
+
+        if(dataInBuffer) {
+            char tmp[1024] ={0};
+            sprintf(tmp, "%s", msg_buffer);
+            putrsUSBUSART(tmp);
+            //putrsUSBUSART(msg_buffer);
+
+            //msg_buffer[0] = '\0';
+            memset(&msg_buffer[0], 0, sizeof(msg_buffer));
+            //strcpy(msg_buffer, "");
+            dataInBuffer = FALSE;
+        }
+
         
     }
 

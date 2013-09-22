@@ -10,7 +10,7 @@
 
 #include "Microchip/GenericTypeDefs.h"
 
-char msg_buffer[256];
+char msg_buffer[1024];
 BOOL dataInBuffer;
 void appendBuffer(char* msg);
 
