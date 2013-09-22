@@ -202,6 +202,8 @@ int i2c_read(unsigned char addr, unsigned char reg, unsigned char length, unsign
         }
 
         data[i] = I2CGetByte(I2C2);
+        IdleI2C2();
+
     }
     StopTransfer();
     return 0;
