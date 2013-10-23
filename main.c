@@ -168,7 +168,6 @@ int main(int argc, char** argv) {
                     inv_orientation_matrix_to_scalar(gyro_orientation));
                 //dmp_register_tap_cb(tap_cb);
                 //dmp_register_android_orient_cb(android_orient_cb);
-                //hal.dmp_features = DMP_FEATURE_SEND_CAL_GYRO;
                 hal.dmp_features = DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_GYRO_CAL;
                 //hal.dmp_features = DMP_FEATURE_6X_LP_QUAT; //| DMP_FEATURE_TAP |
                 //    DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO |
@@ -178,7 +177,6 @@ int main(int argc, char** argv) {
                 mpu_set_dmp_state(1);
                 hal.dmp_on = 1;
                 appendBuffer("INFO: MPU Initialization stage 3 complete\r\n");
-                appendBuffer("01234567891011121314151617181920\r\n");
 
                 mpu_init_stage = 3;
                 break;
@@ -190,9 +188,6 @@ int main(int argc, char** argv) {
                 unsigned long timestamp;
                 short sensors;
                 unsigned char more;
-                /*int a = gyro[0];
-                int b = gyro[1];
-                int c = gyro[2];*/
 
                 int a = quat[0];
                 int b = quat[1];
@@ -204,25 +199,10 @@ int main(int argc, char** argv) {
                         break;
                     }
                     usbPrintf("Q %i %i %i %i\r\n", a, b, c, d);
-                    
-                    /*if(!(sensors & INV_XYZ_GYRO)) {
-                        break;
-                    }
-                    usbPrintf("G %i %i %i\r\n", a, b, c);*/
                 }
                 break;
             }
         }
-
-
-        /*if(j > 10000) {
-            j = 0;
-            appendBuffer("Test\r\n");
-            Delay10us(10);
-        } else {
-            j++;
-        }*/
-
 
         while(!USBUSARTIsTxTrfReady()) {
             USBDeviceTasks();
@@ -233,17 +213,11 @@ int main(int argc, char** argv) {
             char tmp[1024] ={0};
             sprintf(tmp, "%s", msg_buffer);
             putrsUSBUSART(tmp);
-            //putrsUSBUSART(msg_buffer);
 
-            //msg_buffer[0] = '\0';
             memset(&msg_buffer[0], 0, sizeof(msg_buffer));
-            //strcpy(msg_buffer, "");
             dataInBuffer = FALSE;
         }
-
-        
     }
-
     return (EXIT_SUCCESS);
 }
 
