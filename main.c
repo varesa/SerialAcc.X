@@ -168,7 +168,8 @@ int main(int argc, char** argv) {
                     inv_orientation_matrix_to_scalar(gyro_orientation));
                 //dmp_register_tap_cb(tap_cb);
                 //dmp_register_android_orient_cb(android_orient_cb);
-                hal.dmp_features = DMP_FEATURE_SEND_RAW_GYRO;
+                //hal.dmp_features = DMP_FEATURE_SEND_CAL_GYRO;
+                hal.dmp_features = DMP_FEATURE_6X_LP_QUAT;
                 //hal.dmp_features = DMP_FEATURE_6X_LP_QUAT; //| DMP_FEATURE_TAP |
                 //    DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO |
                 //    DMP_FEATURE_GYRO_CAL;
@@ -185,18 +186,29 @@ int main(int argc, char** argv) {
             {
                 short gyro[3];
                 short accel[3];
-                long quat[6];
+                long quat[4];
                 unsigned long timestamp;
                 short sensors;
                 unsigned char more;
-                int a = gyro[0];
+                /*int a = gyro[0];
                 int b = gyro[1];
-                int c = gyro[2];
+                int c = gyro[2];*/
+
+                int a = quat[0];
+                int b = quat[1];
+                int c = quat[2];
+                int d = quat[3];
+
                 if(dmp_read_fifo(gyro, accel, quat, &timestamp, &sensors, &more) == 0) {
-                    if(!(sensors & INV_XYZ_GYRO)) {
+                    if(!(sensors & INV_WXYZ_QUAT)) {
                         break;
                     }
-                    usbPrintf("G %i %i %i\r\n", a, b, c);
+                    usbPrintf("Q %i %i %i %i\r\n", a, b, c, d);
+                    
+                    /*if(!(sensors & INV_XYZ_GYRO)) {
+                        break;
+                    }
+                    usbPrintf("G %i %i %i\r\n", a, b, c);*/
                 }
                 break;
             }
