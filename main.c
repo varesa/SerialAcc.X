@@ -169,7 +169,7 @@ int main(int argc, char** argv) {
                 //dmp_register_tap_cb(tap_cb);
                 //dmp_register_android_orient_cb(android_orient_cb);
                 //hal.dmp_features = DMP_FEATURE_SEND_CAL_GYRO;
-                hal.dmp_features = DMP_FEATURE_6X_LP_QUAT;
+                hal.dmp_features = DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_GYRO_CAL;
                 //hal.dmp_features = DMP_FEATURE_6X_LP_QUAT; //| DMP_FEATURE_TAP |
                 //    DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO |
                 //    DMP_FEATURE_GYRO_CAL;
